@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "APresto_Customer",
+    "slug": "APresto_Customer",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "APresto_Customer"
+}
