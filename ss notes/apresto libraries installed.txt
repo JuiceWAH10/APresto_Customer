@@ -75,3 +75,21 @@ yarn add @reduxjs/toolkit
 
 react redux:
 yarn add react-redux
+
+image picker:
+expo install expo-image-picker
+
+uuid:
+npm install react-native-uuid
+
+toast:
+yarn add react-native-toast-message
+
+elements:
+npm install react-native-elements
+
+# or with yarn
+yarn add react-native-elements
+
+#dependent to vector icons so:
+npx react-native link react-native-vector-icons
