@@ -3,14 +3,18 @@ npm install
 npm rebuild
 expo start
 
-if used npm and yarn at the same time please do the following:
+if used npm and yarn at the same time please do the 
+
+following:
 npm install
 yarn install
 this is to sync each manager records...
 
-if requiring peer of react related libraries (ex. reac, react-dom...) use the line below:
+if requiring peer of react related libraries (ex. react, react-dom...) use the line below:
 npm install --save react@latest
-		   this part can be changed into what library to be updated to latest like:
+		   this part can be changed into what 
+
+library to be updated to latest like:
 npm install --save react-dom@latest if react dom is the library to update.
 alternative from yarn:
 yarn upgrade react@latest
@@ -20,7 +24,6 @@ npm i @react-navigation/stack @react-navigation/drawer @react-navigation/bottom-
 
 expo dependency on reactnav:
 yarn add react-native-screens react-native-safe-area-context
-
 
 expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view
 
@@ -46,6 +49,8 @@ yarn upgrade prop-types@latest
 npm install validator
 
 firebase:
+npm install --save firebase #from google directly, this one's better than the package below (react-native-firebase)
+
 # Install & setup the app module
 yarn add @react-native-firebase/app
 
@@ -58,8 +63,7 @@ yarn add @react-native-firebase/storage
 # Install the authentication module
 yarn add @react-native-firebase/auth
 
-# If you're developing your app using iOS, run this command
-cd ios/ && pod install
+# If you're developing your app using iOS, run this command cd ios/ && pod install
 
 
 
@@ -93,3 +97,10 @@ yarn add react-native-elements
 
 #dependent to vector icons so:
 npx react-native link react-native-vector-icons
+
+
+responsive screen:
+npm install react-native-responsive-screen --save
+
+snap carousel:
+npm install react-native-responsive-screen --save
