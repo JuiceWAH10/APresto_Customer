@@ -103,4 +103,4 @@ responsive screen:
 npm install react-native-responsive-screen --save
 
 snap carousel:
-npm install react-native-responsive-screen --save
+expo install react-native-snap-carousel
