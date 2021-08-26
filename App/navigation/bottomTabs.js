@@ -42,11 +42,10 @@ export const customerBottomTabs = () =>{
               <Image source={iconName} style={{width: 30, height: 30}} resizeMode="contain"/>
             );
           },
+          tabBarActiveTintColor: "#fd4140",
+          tabBarInactiveTintColor: "black",
+          headerShown: false
         })}
-        tabBarOptions={{
-          activeTintColor: "#fd4140",
-          inactiveTintColor: 'black'
-        }}
       >
         <Tabs.Screen name="EXPLORE" component={Explore} />        
         <Tabs.Screen name="SHOPS" component={Shops} />    

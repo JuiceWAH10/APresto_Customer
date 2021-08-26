@@ -18,7 +18,7 @@ const Stack = createStackNavigator();
 export default Screens = () => {
   return(
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="customerShops" component={ClientHomepage} />  
+      <Stack.Screen name="customerShops" children={customerBottomTabs} />  
       <Stack.Screen name="QRCodeScanner" component={QRCodeScanner} />  
       <Stack.Screen name="shopItems" component={ShopItems} />
       <Stack.Screen name="shopItemsCart" component={ShopItemsCart} />  
