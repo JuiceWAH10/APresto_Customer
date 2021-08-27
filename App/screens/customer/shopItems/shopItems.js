@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect,useState } from 'react';
+import firebase from 'firebase';
 import { 
     Animated,
     ImageBackground,
@@ -43,9 +44,35 @@ function shopItems(props) {
     });
 
     const dispatch = useDispatch();
+    {/*
     //(juswa) fetch data from redux store in App.js using useSelector. the data is from the state managed by reducers
     const getProducts = useSelector(state => state.products.allProducts);
     const products = getProducts.filter((prod) => {
+        if(prod.shop_ID === shop_ID){
+            return prod;
+        }
+    })
+
+    
+    */}
+
+    //fetch data from firestore
+    const [products, setProducts] = useState([]);
+
+    useEffect(()=>{
+        const subscriber = firebase.firestore()
+        .collection('Products')
+        .onSnapshot(querySnapshot => {
+            const prod = [];
+            querySnapshot.forEach(function (product){         
+                prod.push(product.data());
+            });
+            setProducts(prod);
+        });
+        return () => subscriber();
+    }, []);
+
+    const sortedProducts = products.filter((prod) => {
         if(prod.shop_ID === shop_ID){
             return prod;
         }
@@ -142,7 +169,7 @@ function shopItems(props) {
                         <FlatList 
                             horizontal={true} 
                             style={styles.popularItems} 
-                            data={products}
+                            data={sortedProducts}
                             keyExtractor={item => item.product_ID}
                             renderItem={itemData =>
                                 <PopularShopItem
@@ -167,7 +194,7 @@ function shopItems(props) {
                         {/* List of all items !note that items in Popular Items is also included here* */}
                         <Text style={styles.allItemsTitle}>All Items</Text>
                             <FlatList
-                                data={products}
+                                data={sortedProducts}
                                 keyExtractor={item => item.product_ID}
                                 renderItem={itemData => 
                                     <AllShopItem 

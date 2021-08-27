@@ -15,7 +15,7 @@ function popularRewardItem(props) {
         <View style={styles.popularContent}>
             <ImageBackground style={styles.popularBgImage}
                 imageStyle={{ borderRadius: 30}}
-                source={require('../../../../assets/Liked_Shop.jpg')}>
+                source={{uri:props.imgLink}}>
                 <View style={styles.darken}>
                     <Text style={styles.popularLabel}>{props.reward_Name}</Text>
                     <Text style={styles.popularLabelSmall}>{props.pointsReq}</Text>

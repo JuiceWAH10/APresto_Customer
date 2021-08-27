@@ -6,7 +6,7 @@ export const shops = [
     new Shop(
         '1',
         '1',
-        'Keitandkat Perfume',
+        'Keitandkat Milk Tea',
         'Jacob St., Taytay, Rizal',
         'Perfumes'
         )

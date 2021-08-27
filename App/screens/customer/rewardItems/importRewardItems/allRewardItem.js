@@ -14,7 +14,7 @@ function allRewardItem(props) {
     return (
         <View style={styles.container}>
             <Image style={styles.itemImage}
-                source={require('../../../../assets/DummyShop.jpg')}>
+                source={{uri:props.imgLink}}>
             </Image>
             <View style={styles.itemContainer}>
                 <Text style={styles.itemName}>{props.reward_Name}</Text>

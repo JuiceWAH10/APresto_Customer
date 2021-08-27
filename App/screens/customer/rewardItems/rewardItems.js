@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { 
     Animated,
     ImageBackground,
@@ -16,6 +16,7 @@ import Icon2 from 'react-native-vector-icons/AntDesign';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import firebase from 'firebase';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -44,12 +45,36 @@ function rewardItems(props) {
     });
 
     const dispatch = useDispatch();
+    {/*
     //(juswa) fetch data from redux store in App.js using useSelector. the data is from the state managed by reducers
     const getRewards = useSelector(state => state.rewards.allRewards);
     const rewards = getRewards.filter((rew) => {
         if(rew.shop_ID === shop_ID){
             return rew
         }      
+    })
+    */}
+
+    //fetch data from firestore
+    const [products, setProducts] = useState([]);
+
+    useEffect(()=>{
+        const subscriber = firebase.firestore()
+        .collection('Rewards')
+        .onSnapshot(querySnapshot => {
+            const prod = [];
+            querySnapshot.forEach(function (product){         
+                prod.push(product.data());
+            });
+            setProducts(prod);
+        });
+        return () => subscriber();
+    }, []);
+
+    const rewards = products.filter((prod) => {
+        if(prod.shop_ID === shop_ID){
+            return prod;
+        }
     })
 
     return (

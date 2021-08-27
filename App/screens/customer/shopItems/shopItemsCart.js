@@ -32,7 +32,8 @@ function shopItemsCart(props) {
                 productTitle: state.cart.items[key].productTitle,
                 productPrice: state.cart.items[key].productPrice,
                 quantity: state.cart.items[key].quantity,
-                total: state.cart.items[key].total
+                total: state.cart.items[key].total,
+                imgLink: state.cart.items[key].imgLink
             });
         }
         return cartItemsArray.sort((a,b) => a.product_ID > b.product_ID ? 1 : -1);
@@ -77,6 +78,7 @@ function shopItemsCart(props) {
                             quantity = {itemData.item.quantity} 
                             product_Name = {itemData.item.productTitle}
                             price = {itemData.item.total.toFixed(2)}
+                            imgLink= {itemData.item.imgLink}
                             removeFromCart = {() => {
                                 dispatch(cartAction.removeFromCart(itemData.item.product_ID))
                             }}

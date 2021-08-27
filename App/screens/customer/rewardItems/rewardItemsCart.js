@@ -32,7 +32,8 @@ function rewardItemsCart(props) {
                 productTitle: state.rewCart.rewItems[key].productTitle,
                 productPrice: state.rewCart.rewItems[key].productPrice,
                 quantity: state.rewCart.rewItems[key].quantity,
-                total: state.rewCart.rewItems[key].total
+                total: state.rewCart.rewItems[key].total,
+                imgLink: state.rewCart.rewItems[key].imgLink
             });
         }
         return rewCartItemsArray.sort((a,b) => a.reward_ID > b.reward_ID ? 1 : -1);
@@ -77,6 +78,7 @@ function rewardItemsCart(props) {
                             quantity = {itemData.item.quantity} 
                             product_Name = {itemData.item.productTitle}
                             price = {itemData.item.productPrice.toFixed(2)}
+                            imgLink= {itemData.item.imgLink}
                             removeFromCart = {() => {
                                 dispatch(rewCartFunction.cancelRedeem(itemData.item.reward_ID))
                             }}
