@@ -17,8 +17,8 @@ function profile(props) {
                     <Image style={styles.profileProfileImage}
                         source={require('../../assets/Store.jpg')}>
                     </Image>
-                    <Text style={styles.profileUsername}>Username</Text>
-                    <Text style={styles.profileFullname}>Full Name</Text>
+                    <Text style={styles.profileUsername}>vince</Text>
+                    <Text style={styles.profileFullname}>John Vincent Sta Ana</Text>
                     <View style={styles.profileButtonContainer}>
                         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('customerEditProfile')} >
                             <Icon name="user" size={20} color="#fff" />

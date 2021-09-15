@@ -5,6 +5,10 @@
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
+    ],
+    "plugins": [
+      "expo-barcode-scanner",
+      "expo-image-picker"
     ]
   },
   "name": "APresto_Customer"

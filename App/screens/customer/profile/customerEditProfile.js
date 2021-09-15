@@ -112,7 +112,7 @@ function customerEditProfile(props) {
                             //Password input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'lock' }}
-                            //secureTextEntry={true}
+                            secureTextEntry={true}
                             placeholder="Password"
                             text={passwordField.text}
                             onChangeText={(text) => {setPasswordField({text});}}
@@ -125,7 +125,7 @@ function customerEditProfile(props) {
                             //Re-enter password input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'lock' }}
-                            //secureTextEntry={true}
+                            secureTextEntry={true}
                             placeholder="Re-enter Password"
                             text={passwordReentryField.text}
                             onChangeText={(text) => {setPasswordReentryField({text});}}
