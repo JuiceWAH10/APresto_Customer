@@ -37,7 +37,7 @@ function explore(props) {
 
                 {/* Dual View */}
                 <View style={styles.dual}>
-                    <TouchableOpacity onPress={()=>console.log("Pressed")}>
+                    <TouchableOpacity onPress={()=> navigation.navigate('nearMeList')}>
                         <View style={styles.dualContent}>
                             <ImageBackground style={styles.dualBgImage}
                                 imageStyle={{ borderRadius: 30}}
@@ -49,7 +49,7 @@ function explore(props) {
                             </ImageBackground>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>console.log("Pressed")}>
+                    <TouchableOpacity onPress={()=> navigation.navigate('likedShopList')}>
                         <View style={styles.dualContent}>
                             <ImageBackground style={styles.dualBgImage}
                                 imageStyle={{ borderRadius: 30}}
