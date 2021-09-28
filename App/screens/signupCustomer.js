@@ -1,15 +1,13 @@
-import React, {useState} from 'react';
+import React, { useContext, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/AntDesign';
-import validator from "validator";
-import firebase, { auth } from "firebase";
+import validator from 'validator';
+import { AuthContext } from '../functions/authProvider';
 import { Input } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
-import { showMessage } from "react-native-flash-message";
 
-//validation function of email
+//validator
 const validateFields = (email, password, firstname, lastname, address, contact, username) => {
     const isValid = {
         firstname: validator.matches(firstname, "^[a-z A-Z]+$"),
@@ -30,39 +28,7 @@ const validateFields = (email, password, firstname, lastname, address, contact, 
     return isValid;
 };
 
-//sign up function to create user/ CREATE ACCOUNT FUNCTION
-const createAccount = (email, password, firstname, lastname, address, contact, username) => {
-    auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then(({ user }) => {
-            console.log("Creating user...");   
-            firebase.firestore().collection("users").doc(user.uid).set({
-                firstname,
-                lastname,
-                address,
-                contact,
-                username,
-                email
-            });
-        })
-        .catch(() => {
-            showMessage({
-                message: "Account already exist",
-                description: "Please enter a new email address",
-                type: "warning",
-                position: "bottom",
-                floating: "true",
-                icon: { icon: "auto", position: "left" },
-                autoHide:"true", 
-                duration: 1000,
-            });
-            console.log("Invalid email");
-        })
-};
-
-
-function signupCustomer(props) {
-    const navigation = useNavigation();
+const signupCustomer = ({navigation}) => {
 
     //First name var
     const [firstnameField, setFirstnameField] = useState({
@@ -111,6 +77,9 @@ function signupCustomer(props) {
         text: "", 
         errorMessage: "",
     });
+
+    //calls register function from authProvider.js
+    const {register} = useContext(AuthContext);
 
     return (
         <SafeAreaView style={styles.droidSafeArea}>       
@@ -286,7 +255,7 @@ function signupCustomer(props) {
 
                     //IF ALL INPUTS ARE VALID THIS IS WILL CREATE ACCOUNT FUNCTION 
                     if(isAllValid){
-                        createAccount(emailField.text, passwordField.text, firstnameField.text, lastnameField.text, addressField.text, contactField.text, usernameField.text);
+                        register(emailField.text, passwordField.text, firstnameField.text, lastnameField.text, addressField.text, contactField.text, usernameField.text);
                         //props.navigation.navigate('login');                   
                     }
 

@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Image, ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon2 from 'react-native-vector-icons/AntDesign';
-import { useNavigation } from '@react-navigation/native';
-import validator from "validator";
-import { auth } from "firebase";
+import validator from 'validator';
+import { AuthContext } from '../functions/authProvider';
 import { Input } from 'react-native-elements';
-import { showMessage } from "react-native-flash-message";
 
 
 //validation function of email
@@ -24,32 +22,8 @@ const validateFields = (email, password) => {
   return isValid;
 };
 
-//log in function to have access
-const login = (email, password) => {
-  auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => {
-          console.log("Logged in");
-      })
-      .catch(() => {
-        showMessage({
-          message: "Account does not exist",
-          type: "warning",
-          position: "bottom",
-          floating: "true",
-          icon: { icon: "info", position: "left" },
-          autoHide:"true", 
-          duration: 1000,
-        });
-        console.log("No user");  
-    })
-};
-
-function LogIn(props) {
-    //const [userName] = React.useState('');
-    //const [passWord, setTextPW] = React.useState('');
+const LogIn = ({navigation}) => {
     const [toggleCheckBox, setToggleCheckBox] = useState({check: false});
-    const navigation = useNavigation();
 
     //Email variables
     const [emailField, setEmailField] = useState({
@@ -62,6 +36,9 @@ function LogIn(props) {
       text: "", 
       errorMessage: "",
     });
+
+    //calls login function from authProvider.js
+    const {login} = useContext(AuthContext);
 
     return (
       <ImageBackground

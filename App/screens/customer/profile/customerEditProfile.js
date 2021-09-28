@@ -1,40 +1,79 @@
-import React, {useState} from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import React, { useContext, useState, useEffect } from 'react';
+import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/AntDesign';
+import firebase from 'firebase';
+import validator from 'validator';
+import { AuthContext } from '../../../functions/authProvider';
 import { Input } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
 
-function customerEditProfile(props) {
-    const navigation = useNavigation();
+//validator under work
+const validateFields = (email, password, firstname, lastname, address, contact, username) => {
+    const isValid = {
+        firstname: validator.matches(firstname, "^[a-z A-Z]+$"),
+        lastname: validator.matches(lastname, "^[a-z A-Z]+$"),
+        address: validator.matches(address, "^[0-9 a-z A-Z \.\,\-]+$"),
+        contact: validator.isMobilePhone(contact),
+        username: validator.matches(username, "^[0-9a-z\_]{1,15}$"),
+        email: validator.isEmail(email),
+        password: validator.isStrongPassword(password, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+        }),
+        
+    };
+    return isValid;
+};
 
-    //below statements are not used
-    const [firstName, setTextFN] = React.useState('');
-    const [lastName, setTextLN] = React.useState('');
-    const [address, setTextA] = React.useState('');
-    const [contactNo, setTextCN] = React.useState('');
-    const [userName, setTextUN] = React.useState('');
-    //const [email, setTextE] = React.useState('');
-    //const [password, setTextPW] = React.useState('');
-    //const [retypePassword, setTextRPW] = React.useState('');
+const customerEditProfile = ({navigation}) => {
 
-    //Email variables
-    const [emailField, setEmailField] = useState({
-        text: "", 
-        errorMessage: "",
-    });
+    //user state
+    const {user} = useContext(AuthContext);
+    const [userData, setUserData] = useState(null);
 
-    //Password variables
-    const [passwordField, setPasswordField] = useState({
-        text: "", 
-        errorMessage: "",
-    });
+    //access current user
+    const getUser = async() => {
+        await firebase.firestore()
+        .collection('users')
+        .doc(user.uid)
+        .get()
+        .then((documentSnapshot) => {
+            if(documentSnapshot.exists){
+                console.log('User Data', documentSnapshot.data());
+                setUserData(documentSnapshot.data());
+            }
+        })      
+    }
 
-    //Re-enter password variables
-    const [passwordReentryField, setPasswordReentryField] = useState({
-        text: "", 
-        errorMessage: "",
-    });
+    //update current user from the firestore
+    const handleUpdate = async() => {
+        firebase.firestore()
+        .collection('users')
+        .doc(user.uid)
+        .update({
+            firstname: userData.firstname,
+            lastname: userData.lastname,
+            address: userData.address,
+            contact: userData.contact,
+            username: userData.username,
+            email: userData.email,
+            password: userData.password
+        })
+        .then(() => {
+            console.log('User Updated!');
+            Alert.alert(
+            'Profile Updated!',
+            'Your profile has been updated successfully.'
+            ); 
+        })
+    }
+
+    useEffect(() => {
+        getUser();
+    }, []);
 
     return (
         <SafeAreaView style={styles.droidSafeArea}>       
@@ -50,49 +89,54 @@ function customerEditProfile(props) {
                     <Text style={styles.formTitles}>Basic Information</Text>
                     <View style={styles.textView}>
                         <Input
+                            //First Name input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'list-alt' }}
                             placeholder="First Name"
-                            onChangeText={text => setTextFN(text)}
-                            value={firstName}
+                            onChangeText={(text) => {setUserData({...userData, firstname: text});}}
+                            value={userData ? userData.firstname : ''}
                         />
                     </View>
                     <View style={styles.textView}>
                         <Input
+                            //Last Name input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'list-alt' }}
                             placeholder="Last Name"
-                            onChangeText={text => setTextLN(text)}
-                            value={lastName}
+                            onChangeText={(text) => {setUserData({...userData, lastname: text});}}
+                            value={userData ? userData.lastname : ''}
                         />
                     </View>
                     <View style={styles.textView}>
                         <Input
+                            //Address input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'home' }}
                             placeholder="Address"
-                            onChangeText={text => setTextA(text)}
-                            value={address}
+                            onChangeText={(text) => {setUserData({...userData, address: text});}}
+                            value={userData ? userData.address : ''}
                         />
                     </View>
                     <View style={styles.textView}>
                         <Input
+                            //Contact input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'phone' }}
                             placeholder="Contact Number"
-                            onChangeText={text => setTextCN(text)}
-                            value={contactNo}
+                            onChangeText={(text) => {setUserData({...userData, contact: text});}}
+                            value={userData ? userData.contact : ''}
                             keyboardType="numeric"
                         />
                     </View>
                     <Text style={styles.formTitles}>Account Information</Text>
                     <View style={styles.textView}>
                         <Input
+                            //Username input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'user' }}
-                            placeholder="User Name"
-                            onChangeText={text => setTextUN(text)}
-                            value={userName}
+                            placeholder="Username"
+                            onChangeText={(text) => {setUserData({...userData, username: text});}}
+                            value={userData ? userData.username : ''}
                         />
                     </View>
                     <View style={styles.textView}>
@@ -101,10 +145,9 @@ function customerEditProfile(props) {
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'envelope' }}
                             placeholder="Email"
-                            text={emailField.text}
-                            onChangeText={(text) => {setEmailField({text});}}
-                            errorMessage={emailField.errorMessage}
-                            autoCompleteType="email"
+                            onChangeText={(text) => {setUserData({...userData, email: text});}}
+                            value={userData ? userData.email : ''}
+                            autoCompleteType="email"                           
                         />
                     </View>
                     <View style={styles.textView}>
@@ -112,11 +155,10 @@ function customerEditProfile(props) {
                             //Password input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'lock' }}
-                            //secureTextEntry={true}
-                            placeholder="Password"
-                            text={passwordField.text}
-                            onChangeText={(text) => {setPasswordField({text});}}
-                            errorMessage={passwordField.errorMessage}
+                            secureTextEntry={true}
+                            placeholder="Password"              
+                            onChangeText={(text) => {setUserData({...userData, password: text});}}
+                            value={userData ? userData.password : ''}
                             autoCompleteType="password"
                         />
                     </View>
@@ -125,11 +167,9 @@ function customerEditProfile(props) {
                             //Re-enter password input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'lock' }}
-                            //secureTextEntry={true}
+                            secureTextEntry={true}
                             placeholder="Re-enter Password"
-                            text={passwordReentryField.text}
                             onChangeText={(text) => {setPasswordReentryField({text});}}
-                            errorMessage={passwordReentryField.errorMessage}
                         />
                     </View>
                     
@@ -137,11 +177,12 @@ function customerEditProfile(props) {
                 {/* Navigation isn't final */}
                 
                 {/*CONTINUE BUTTON AND ERROR MESSAGES*/}
-                <TouchableOpacity style={styles.button} onPress={() => console.log("Profile Updated")}>
+                {/*handleUpdate function*/}
+                <TouchableOpacity style={styles.button} onPress={handleUpdate}>
                     <Text style={styles.buttonLabel}>Update Information</Text>
                 </TouchableOpacity>
             </View>
-            
+            {/*() => console.log("Profile Updated")*/}
         </SafeAreaView>
     );
 }
