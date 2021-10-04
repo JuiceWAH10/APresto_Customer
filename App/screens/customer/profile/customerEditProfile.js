@@ -1,11 +1,16 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/AntDesign';
 import firebase from 'firebase';
 import validator from 'validator';
 import { AuthContext } from '../../../functions/authProvider';
 import { Input } from 'react-native-elements';
+import * as ImagePicker from 'expo-image-picker';
+import uuid from 'react-native-uuid';
+import { showMessage } from "react-native-flash-message";
+import Dialog from "react-native-dialog";
+
 
 //validator under work
 const validateFields = (email, password, firstname, lastname, address, contact, username) => {
@@ -33,6 +38,9 @@ const customerEditProfile = ({navigation}) => {
     //user state
     const {user} = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
+    const [visible, setVisible] = useState(false);
+    const [URI, setURI] = useState(null);
+
 
     //access current user
     const getUser = async() => {
@@ -48,8 +56,74 @@ const customerEditProfile = ({navigation}) => {
         })      
     }
 
-    //update current user from the firestore
-    const handleUpdate = async() => {
+    //For Dialog Box
+    const showDialog = () => {
+        setVisible(true);
+    };
+
+    const handleCancel = () => {
+        setVisible(false);
+    };
+
+    //handleUpdate function
+    const handleUpdate = () => {
+        editProfile();
+        setVisible(false);
+    };
+
+    const image = {
+        url: "wew",
+        get gURL(){
+            return this.url;
+        },
+        set sURL(u){
+            this.url = u;
+        }
+    }
+
+    var imageUUID = uuid.v4(); // generates UUID (Universally Unique Identifier)
+        
+    // Code for Image Picker and Uploading to Firebase storage
+    const pickImage = async () => {
+        //For choosing photo in the library and crop the photo
+        let result = await 
+            ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [3, 4],
+                quality: 1,
+            });
+        if (!result.cancelled) {
+            setURI(result.uri);
+        }
+        console.log(result); // To Display the information of image on the console
+    };
+
+    //Function to upload to Firebase storage
+    const uploadImage = async(uri, imageName) => {
+        const response = await fetch(uri);
+        const blob = await response.blob(); 
+        
+        return new Promise(function(resolve) {
+            var ref = firebase.storage().ref().child("images_ProfileImages/" + imageName);
+            ref.put(blob).then((snapshot) => {
+                snapshot.ref.getDownloadURL().then((downloadURL)=>{
+                    console.log('File available at', downloadURL);
+                    image.sURL = downloadURL;
+                    console.log('from upload image: ' + image.gURL)
+                    resolve('wew');
+                });
+            });
+        })
+    };
+
+    const editProfile = async () => {
+        //update current user from the firestore
+        await uploadImage(URI, imageUUID)
+        console.log('from add function: ', image.gURL);
+        crud.createShop(image.gURL);
+        navigation.goBack();
+
         firebase.firestore()
         .collection('users')
         .doc(user.uid)
@@ -64,12 +138,18 @@ const customerEditProfile = ({navigation}) => {
         })
         .then(() => {
             console.log('User Updated!');
-            Alert.alert(
-            'Profile Updated!',
-            'Your profile has been updated successfully.'
-            ); 
+            showMessage({
+                message: "Profile Updated Successfully",
+                type: "success",
+                color: "#fff",
+                position: "top",
+                floating: "true",
+                icon: { icon: "info", position: "left" },
+                autoHide:"true", 
+                duration: 2000,
+            });
         })
-    }
+    };
 
     useEffect(() => {
         getUser();
@@ -86,6 +166,14 @@ const customerEditProfile = ({navigation}) => {
                 <Text style={styles.title}>Edit Profile</Text>
                 <Text style={styles.subtitle}>Edit infos about yourself.</Text>
                 <ScrollView style={styles.form}>
+                    <Text style={styles.formTitles}>Upload Profile Picture</Text>
+                    {/* Display the selected Image*/}
+                    {URI && <Image source={{ uri: URI }} style={styles.imageUpload} />} 
+
+                    {/* Button for Image Picker */}
+                    <TouchableOpacity style={styles.imageButton} onPress={pickImage} >
+                        <Text style={styles.imageButtonLabel}>Upload Image</Text>
+                    </TouchableOpacity>
                     <Text style={styles.formTitles}>Basic Information</Text>
                     <View style={styles.textView}>
                         <Input
@@ -177,10 +265,15 @@ const customerEditProfile = ({navigation}) => {
                 {/* Navigation isn't final */}
                 
                 {/*CONTINUE BUTTON AND ERROR MESSAGES*/}
-                {/*handleUpdate function*/}
-                <TouchableOpacity style={styles.button} onPress={handleUpdate}>
-                    <Text style={styles.buttonLabel}>Update Information</Text>
+                <TouchableOpacity style={styles.button} onPress={showDialog}>
+                    <Text style={styles.buttonLabel}>Update Profile</Text>
                 </TouchableOpacity>
+                <Dialog.Container visible={visible}>
+                    <Dialog.Title>Edit Profile</Dialog.Title>
+                    <Dialog.Description>Do you really want to update Profile?</Dialog.Description>
+                    <Dialog.Button label="Cancel" onPress={handleCancel} />
+                    <Dialog.Button label="Ok" onPress={handleUpdate} />
+                </Dialog.Container>
             </View>
             {/*() => console.log("Profile Updated")*/}
         </SafeAreaView>
@@ -221,6 +314,29 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontSize: 16,
         fontWeight: "bold"
+    },
+    imageButton:{
+        backgroundColor: '#ee4b43',
+        borderRadius: 30,
+        alignItems: 'center',
+        alignSelf: "center",
+        justifyContent: 'center',
+        width: 150,
+        height: hp('6%'),
+        marginTop: 5,
+        marginBottom: 10
+    },
+    imageButtonLabel: {
+        color: "#fff",
+        fontSize: 14
+    },
+    imageUpload: {
+        alignSelf: "center",
+        width: 150,
+        height: 200,
+        marginVertical: 10,
+        borderWidth: 2,
+        borderColor: "#ee4b43"
     },
     input: {
         height: 50,

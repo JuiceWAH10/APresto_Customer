@@ -37,7 +37,7 @@ function explore(props) {
 
                 {/* Dual View */}
                 <View style={styles.dual}>
-                    <TouchableOpacity onPress={()=>console.log("Pressed")}>
+                    <TouchableOpacity onPress={()=> navigation.navigate('nearMeList')}>
                         <View style={styles.dualContent}>
                             <ImageBackground style={styles.dualBgImage}
                                 imageStyle={{ borderRadius: 30}}
@@ -49,7 +49,7 @@ function explore(props) {
                             </ImageBackground>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>console.log("Pressed")}>
+                    <TouchableOpacity onPress={()=> navigation.navigate('likedShopList')}>
                         <View style={styles.dualContent}>
                             <ImageBackground style={styles.dualBgImage}
                                 imageStyle={{ borderRadius: 30}}
@@ -74,9 +74,9 @@ function explore(props) {
                     {/* Insert Code here for importing Most Reviewed shops with info */}
                     <IndivShop shop_ID = {1} shopName="Keitandkat Perfume" address="504 Gondola, Muzon, Taytay, Rizal" specialty="Perfumes"/>
                     <IndivShop shop_ID = {2} shopName="Scrapyard Cafe & Restaurant" address="45 Manila E Rd, Angono, 1930 Rizal" specialty="Pinoy Restaurant"/>
-                    <IndivShop shop_ID = {3} shopName="Blugre Coffee Manila East" address="Don Hilario Cruz, Taytay, Rizal" specialty="Cafe"/>
+                    {/* <IndivShop shop_ID = {3} shopName="Blugre Coffee Manila East" address="Don Hilario Cruz, Taytay, Rizal" specialty="Cafe"/>
                     <IndivShop shop_ID = {4} shopName="Korean BBQ & Buffet" address="Peace Be With You Bldg Velasquez Street Brgy, Taytay, Rizal"/>
-                    <IndivShop shop_ID = {5} shopName="Jamp Sari-Sari Store" address="Jacob St, Taytay, Rizal"/>
+                    <IndivShop shop_ID = {5} shopName="Jamp Sari-Sari Store" address="Jacob St, Taytay, Rizal"/> */}
                 {/* </View> */}
                 {/* End of most Reviewed */}
 

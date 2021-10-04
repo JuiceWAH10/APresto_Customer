@@ -4,12 +4,14 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { AuthContext } from '../../functions/authProvider';
 import firebase from 'firebase';
+import Dialog from "react-native-dialog";
 
 const profile = ({navigation, route}) => {
 
     //user state
     const {user, logout} = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
+    const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(true);
 
     //access current user
@@ -31,6 +33,20 @@ const profile = ({navigation, route}) => {
         navigation.addListener("focus", () => setLoading(!loading));
     }, [navigation, loading]);
 
+    const showDialog = () => {
+        setVisible(true);
+    };
+
+    const handleCancel = () => {
+        setVisible(false);
+    };
+
+    const handleLogout = () => {
+        /*calls logout function from authProvider.js*/
+        logout();
+        setVisible(false);
+    };
+
     return (
         <SafeAreaView style={styles.droidSafeArea}>
             {/* Header */}
@@ -48,11 +64,16 @@ const profile = ({navigation, route}) => {
                             <Icon name="user" size={20} color="#fff" />
                             <Text style={styles.profileButtonLabel}>Edit Profile</Text>
                         </TouchableOpacity>
-                        {/*calls logout function from authProvider.js*/}
-                        <TouchableOpacity style={styles.profileButton} onPress={() => logout()}>
+                        <TouchableOpacity style={styles.profileButton} onPress={showDialog} >
                             <Icon name="logout" size={20} color="#fff" />
                             <Text style={styles.profileButtonLabel}>Log Out</Text>
                         </TouchableOpacity>
+                        <Dialog.Container visible={visible}>
+                            <Dialog.Title>Logout Account</Dialog.Title>
+                            <Dialog.Description>Do you really want to logout?</Dialog.Description>
+                            <Dialog.Button label="Cancel" onPress={handleCancel} />
+                            <Dialog.Button label="Logout" onPress={handleLogout} />
+                        </Dialog.Container>
                     </View>
                 </View>    
             </ImageBackground>

@@ -12,6 +12,8 @@ import RewardItemsCart from '../screens/customer/rewardItems/rewardItemsCart';
 import ShopItemsQR from '../screens/customer/shopItems/shopItemsQR';
 import RewardItemsQR from '../screens/customer/rewardItems/rewardItemsQR';
 import CustomerEditProfile from '../screens/customer/profile/customerEditProfile';
+import LikedShopList from '../screens/customer/likedShops/likedShopList';
+import NearMeList from '../screens/customer/nearMe/nearMeList';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +29,8 @@ export default Screens = () => {
       <Stack.Screen name="rewardItemsCart" component={RewardItemsCart} />
       <Stack.Screen name="rewardItemsQR" component={RewardItemsQR} />
       <Stack.Screen name="customerEditProfile" component={CustomerEditProfile} />
+      <Stack.Screen name="likedShopList" component={LikedShopList} />
+      <Stack.Screen name="nearMeList" component={NearMeList} />
     </Stack.Navigator>
     
   );

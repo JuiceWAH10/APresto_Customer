@@ -48,15 +48,15 @@ function rewardItemsCart(props) {
                 <TouchableOpacity onPress={() => navigation.goBack()} >
                     <Icon name="left" size={30} color="#ee4b43" />
                 </TouchableOpacity>
-            </View>
 
-            <View style={styles.topNavRight}>
-                <TouchableOpacity style={styles.topNavRightButton} onPress={() => {dispatch(rewCartFunction.clearCart())}}>
-                    <Text style={styles.topNavRightText}>Clear Cart</Text>
-                </TouchableOpacity>
+                <View style={styles.topNavRight}>
+                    <TouchableOpacity style={styles.topNavRightButton} onPress={() => {dispatch(cartAction.clearCart())}}>
+                        <Text style={styles.topNavRightText}>Clear Cart</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-
-            {/* End of Navigation */}
+            
+            {/* End of Top Navigation */}
 
             <View style={[styles.formContainer, {flex:15}]}>
                 {/* Banner */}
@@ -216,13 +216,37 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         paddingTop: 5,
     },
-    topNavRight: {
+    topNav: {
         flexDirection: "row",
         justifyContent: "space-between",
-        height: 45,
-        width: 60,
-        marginRight: 15,
+        height: 30,
+        width: wp('100%'),
+        paddingLeft: 10,
+        paddingRight: 10,
         paddingTop: 5,
+    },
+    topNavRight: {
+        flexDirection: "row",
+        // justifyContent: "space-between",
+        height: 20,
+        width: 100,
+        marginRight: 15,
+        // paddingTop: 5,
+    },   
+    topNavRightButton: {
+        backgroundColor: '#ee4b43',
+        borderRadius: 30,
+        alignItems: 'center',
+        alignSelf: "center",
+        justifyContent: 'center',
+        marginTop: 10,
+        width: 100,
+        height: 30,
+    }, 
+    topNavRightText: {
+        color: "#fff",
+        textAlign: "center",
+        fontSize: 14,
     },
 })
 

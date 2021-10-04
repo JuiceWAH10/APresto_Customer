@@ -5,7 +5,7 @@ import Icon2 from 'react-native-vector-icons/AntDesign';
 import validator from 'validator';
 import { AuthContext } from '../functions/authProvider';
 import { Input } from 'react-native-elements';
-
+import Dialog from "react-native-dialog";
 
 //validation function of email
 const validateFields = (email, password) => {
@@ -23,7 +23,10 @@ const validateFields = (email, password) => {
 };
 
 const LogIn = ({navigation}) => {
+    //calls login function from authProvider.js
+    const {login} = useContext(AuthContext);
     const [toggleCheckBox, setToggleCheckBox] = useState({check: false});
+    const [visible, setVisible] = useState(false);
 
     //Email variables
     const [emailField, setEmailField] = useState({
@@ -37,8 +40,19 @@ const LogIn = ({navigation}) => {
       errorMessage: "",
     });
 
-    //calls login function from authProvider.js
-    const {login} = useContext(AuthContext);
+    const showDialog = () => {
+        setVisible(true);
+    };
+    
+    const handleCancel = () => {
+        setVisible(false);
+    };
+    
+    const handleOk = () => {
+        //Enter code here for sending reset confirmation
+        setVisible(false);
+    };
+        //End DialogBox
 
     return (
       <ImageBackground
@@ -100,6 +114,17 @@ const LogIn = ({navigation}) => {
                   />
                   <Text> Log in as store owner. </Text>
                 </View> */}
+
+                <TouchableOpacity style={styles.profileButton} onPress={showDialog} >
+                  <Text style={{color: '#071964', fontSize: 13, marginVertical: 15}}>Forgot Password?</Text>
+                </TouchableOpacity>
+
+                <Dialog.Container visible={visible}>
+                  <Dialog.Title>Forgot Password</Dialog.Title>
+                  <Dialog.Description>Do you want to send an a reset confirmation to you email?</Dialog.Description>
+                  <Dialog.Button label="Cancel" onPress={handleCancel} />
+                  <Dialog.Button label="Ok" onPress={handleOk} />
+                </Dialog.Container>
               </View>
               
                 <TouchableOpacity style={styles.LogInButton} onPress={() => {
@@ -115,7 +140,7 @@ const LogIn = ({navigation}) => {
 
                   if(!isValid.password){
                     console.log("Password must be at least 8 long characters with numbers")
-                    passwordField.errorMessage = "Incorrect Password. Makke sure you entered the password correctly.";
+                    passwordField.errorMessage = "Incorrect Password. Make sure you entered the password correctly.";
                     setPasswordField({...passwordField})
                     isAllValid = false;
                   }
