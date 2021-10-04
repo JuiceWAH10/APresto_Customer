@@ -213,14 +213,14 @@ const signupCustomer = ({navigation}) => {
 
                     if(!isValid.address){
                         console.log("Input a valid address...")
-                        addressField.errorMessage = "Please enter a valid address";
+                        addressField.errorMessage = "Please enter your location address";
                         setAddressField({...addressField});
                         isAllValid = false;
                     }
 
                     if(!isValid.contact){
                         console.log("Input a valid number...")
-                        contactField.errorMessage = "Please enter a valid contact number";
+                        contactField.errorMessage = "Please enter your contact number";
                         setContactField({...contactField});
                         isAllValid = false;
                     }
@@ -234,7 +234,7 @@ const signupCustomer = ({navigation}) => {
 
                     if(!isValid.email){
                         console.log("Input a valid email...")
-                        emailField.errorMessage = "Please enter a valid email";
+                        emailField.errorMessage = "Please enter your email";
                         setEmailField({...emailField});
                         isAllValid = false;
                     }

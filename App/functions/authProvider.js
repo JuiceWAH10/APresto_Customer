@@ -21,19 +21,20 @@ return(
                     await auth()
                             .signInWithEmailAndPassword(email, password)
                             .then(() => {
-                                console.log("Logged in");
+                                console.log("User logged in...");
                             })
                 }catch (error){
                     showMessage({
                       message: "Account does not exist",
                       type: "warning",
-                      position: "bottom",
+                      position: "top",
+                      statusBarHeight: 30,
                       floating: "true",
                       icon: { icon: "info", position: "left" },
-                      autoHide:"true", 
-                      duration: 1000,
+                      autoHide: "true", 
+                      duration: 2000
                     });
-                    console.log('No user', error);  
+                    console.log("Login failed...", error);  
                 }
 
             },
@@ -43,16 +44,15 @@ return(
                     await auth()
                             .createUserWithEmailAndPassword(email, password)
                             .then(() => {
-                                console.log("Creating user...");   
-                                firebase.firestore().collection('users').doc(auth().currentUser.uid).set({
+                                console.log("User account registered...");   
+                                firebase.firestore().collection('Customers').doc(auth().currentUser.uid).set({
                                     firstname,
                                     lastname,
                                     address,
                                     contact,
                                     username,
                                     email,
-                                    password,
-                                    isOwner: 'false'  
+                                    password 
                                 });
                             })
                 }catch (error){
@@ -61,19 +61,23 @@ return(
                         description: "Please enter a new email address",
                         type: "warning",
                         position: "bottom",
+                        statusBarHeight: 20,
                         floating: "true",
                         icon: { icon: "auto", position: "left" },
-                        autoHide:"true", 
-                        duration: 1000,
+                        autoHide: "true", 
+                        duration: 2000
                     });
-                    console.log('Invalid email', error);
+                    console.log("Signup failed...", error);
                 }
             },
             //logout function
             logout: async () => {
                 try{
                     await auth()
-                            .signOut();
+                            .signOut()
+                            .then(() => {
+                                console.log("User logged off...");
+                            })
                 }catch (error){
                     console.log(error);
                 }

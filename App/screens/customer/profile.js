@@ -17,12 +17,11 @@ const profile = ({navigation, route}) => {
     //access current user
     const getUser = async() => {
         await firebase.firestore()
-        .collection('users')
+        .collection('Customers')
         .doc(route.params ? route.params.userId : user.uid)
         .get()
         .then((documentSnapshot) => {
             if(documentSnapshot.exists){
-                console.log('User Data', documentSnapshot.data());
                 setUserData(documentSnapshot.data());
             }
         })      

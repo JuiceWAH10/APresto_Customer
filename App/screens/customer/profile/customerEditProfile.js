@@ -11,7 +11,6 @@ import uuid from 'react-native-uuid';
 import { showMessage } from "react-native-flash-message";
 import Dialog from "react-native-dialog";
 
-
 //validator under work
 const validateFields = (email, password, firstname, lastname, address, contact, username) => {
     const isValid = {
@@ -45,7 +44,7 @@ const customerEditProfile = ({navigation}) => {
     //access current user
     const getUser = async() => {
         await firebase.firestore()
-        .collection('users')
+        .collection('Customers')
         .doc(user.uid)
         .get()
         .then((documentSnapshot) => {
@@ -110,7 +109,7 @@ const customerEditProfile = ({navigation}) => {
                 snapshot.ref.getDownloadURL().then((downloadURL)=>{
                     console.log('File available at', downloadURL);
                     image.sURL = downloadURL;
-                    console.log('from upload image: ' + image.gURL)
+                    console.log('From upload image: ' + image.gURL)
                     resolve('wew');
                 });
             });
@@ -119,13 +118,13 @@ const customerEditProfile = ({navigation}) => {
 
     const editProfile = async () => {
         //update current user from the firestore
-        await uploadImage(URI, imageUUID)
-        console.log('from add function: ', image.gURL);
-        crud.createShop(image.gURL);
-        navigation.goBack();
+        //await uploadImage(URI, imageUUID)
+        //console.log('from add function: ', image.gURL);
+        //crud.createShop(image.gURL);
+        //navigation.goBack();
 
         firebase.firestore()
-        .collection('users')
+        .collection('Customers')
         .doc(user.uid)
         .update({
             firstname: userData.firstname,
@@ -137,16 +136,16 @@ const customerEditProfile = ({navigation}) => {
             password: userData.password
         })
         .then(() => {
-            console.log('User Updated!');
+            console.log("User updated...");
             showMessage({
-                message: "Profile Updated Successfully",
+                message: "Profile updated successfully",
                 type: "success",
-                color: "#fff",
                 position: "top",
+                statusBarHeight: 25,
                 floating: "true",
-                icon: { icon: "info", position: "left" },
-                autoHide:"true", 
-                duration: 2000,
+                icon: { icon: "auto", position: "left" },
+                autoHide: "true", 
+                duration: 2000
             });
         })
     };

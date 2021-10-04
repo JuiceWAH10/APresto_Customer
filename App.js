@@ -19,7 +19,9 @@ import shopReducer from './App/functions/shopReducer';
 import cartReducer from './App/functions/cartReducer';
 import rewCartReducer from './App/functions/rewardsCartReducer';
 import { createStore, combineReducers } from 'redux';
+//import { LogBox } from 'react-native';
 
+//LogBox.ignoreAllLogs();
 // combine all reducers into one object
 const rootReducer = combineReducers({
   shops: shopReducer,

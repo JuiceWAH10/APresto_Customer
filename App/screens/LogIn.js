@@ -115,8 +115,8 @@ const LogIn = ({navigation}) => {
                   <Text> Log in as store owner. </Text>
                 </View> */}
 
-                <TouchableOpacity style={styles.profileButton} onPress={showDialog} >
-                  <Text style={{color: '#071964', fontSize: 13, marginVertical: 15}}>Forgot Password?</Text>
+                <TouchableOpacity style={styles.forgotButton} onPress={showDialog} >
+                  <Text style={{color: '#071964', fontSize: 13, marginVertical: 14}}>Forgot Password?</Text>
                 </TouchableOpacity>
 
                 <Dialog.Container visible={visible}>
@@ -132,15 +132,15 @@ const LogIn = ({navigation}) => {
 
                   let isAllValid = true;
                   if(!isValid.email){
-                    console.log("Please enter a valid email...")
-                    emailField.errorMessage = "Incorrect Email. Please enter a valid email";
+                    console.log("Input a correct email...")
+                    emailField.errorMessage = "Incorrect email. Please enter a valid email";
                     setEmailField({...emailField})
                     isAllValid = false;
                   }
 
                   if(!isValid.password){
-                    console.log("Password must be at least 8 long characters with numbers")
-                    passwordField.errorMessage = "Incorrect Password. Make sure you entered the password correctly.";
+                    console.log("Input a correct password...")
+                    passwordField.errorMessage = "Incorrect password. Make sure you enter the correct password";
                     setPasswordField({...passwordField})
                     isAllValid = false;
                   }
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   },
   LogInContainer: {
     width: wp('80%'),
-    height: hp('40%'),
+    height: hp('45%'),
     backgroundColor: '#fff',
     borderRadius: 30,
     alignItems: 'center',
@@ -271,6 +271,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  forgotButton: {
+    position: "absolute",
+    bottom: 14
   }
 });
 
