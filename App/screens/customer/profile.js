@@ -1,13 +1,29 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Image, ImageBackground, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { auth } from "firebase";
 import { useNavigation } from '@react-navigation/native';
+import Dialog from "react-native-dialog";
 
 
 function profile(props) {
     const navigation = useNavigation();
+    const [visible, setVisible] = useState(false);
+
+    const showDialog = () => {
+        setVisible(true);
+    };
+
+    const handleCancel = () => {
+        setVisible(false);
+    };
+
+    const handleLogout = () => {
+        auth().signOut();
+        setVisible(false);
+    };
+
     return (
         <SafeAreaView style={styles.droidSafeArea}>
             {/* Header */}
@@ -17,17 +33,23 @@ function profile(props) {
                     <Image style={styles.profileProfileImage}
                         source={require('../../assets/Store.jpg')}>
                     </Image>
-                    <Text style={styles.profileUsername}>Username</Text>
-                    <Text style={styles.profileFullname}>Full Name</Text>
+                    <Text style={styles.profileUsername}>vince</Text>
+                    <Text style={styles.profileFullname}>John Vincent Sta Ana</Text>
                     <View style={styles.profileButtonContainer}>
                         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('customerEditProfile')} >
                             <Icon name="user" size={20} color="#fff" />
                             <Text style={styles.profileButtonLabel}>Edit Profile</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.profileButton} onPress={() => {auth().signOut();}} >
+                        <TouchableOpacity style={styles.profileButton} onPress={showDialog} >
                             <Icon name="logout" size={20} color="#fff" />
                             <Text style={styles.profileButtonLabel}>Log Out</Text>
                         </TouchableOpacity>
+                        <Dialog.Container visible={visible}>
+                            <Dialog.Title>Logout Account</Dialog.Title>
+                            <Dialog.Description>Do you really want to logout?</Dialog.Description>
+                            <Dialog.Button label="Cancel" onPress={handleCancel} />
+                            <Dialog.Button label="Logout" onPress={handleLogout} />
+                        </Dialog.Container>
                     </View>
                 </View>    
             </ImageBackground>

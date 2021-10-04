@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
     },
     textInfoBottom: {
         marginTop: 5,
-        marginBottom: 50,
+        marginBottom: 100,
         fontSize: 12,
         opacity: .5,
         paddingLeft: wp('5%'),

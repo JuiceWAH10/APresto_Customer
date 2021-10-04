@@ -7,7 +7,7 @@ import validator from "validator";
 import { auth } from "firebase";
 import { Input } from 'react-native-elements';
 import { showMessage } from "react-native-flash-message";
-
+import Dialog from "react-native-dialog";
 
 //validation function of email
 const validateFields = (email, password) => {
@@ -43,6 +43,7 @@ const login = (email, password) => {
         });
         console.log("No user");  
     })
+
 };
 
 function LogIn(props) {
@@ -62,6 +63,23 @@ function LogIn(props) {
       text: "", 
       errorMessage: "",
     });
+
+    //For DialogBox
+    const [visible, setVisible] = useState(false);
+
+    const showDialog = () => {
+        setVisible(true);
+    };
+    
+    const handleCancel = () => {
+        setVisible(false);
+    };
+    
+    const handleOk = () => {
+        //Enter code here for sending reset confirmation
+        setVisible(false);
+    };
+        //End DialogBox
 
     return (
       <ImageBackground
@@ -123,6 +141,17 @@ function LogIn(props) {
                   />
                   <Text> Log in as store owner. </Text>
                 </View> */}
+
+                <TouchableOpacity style={styles.profileButton} onPress={showDialog} >
+                  <Text style={{color: '#071964', fontSize: 13, marginVertical: 15}}>Forgot Password?</Text>
+                </TouchableOpacity>
+
+                <Dialog.Container visible={visible}>
+                  <Dialog.Title>Forgot Password</Dialog.Title>
+                  <Dialog.Description>Do you want to send an a reset confirmation to you email?</Dialog.Description>
+                  <Dialog.Button label="Cancel" onPress={handleCancel} />
+                  <Dialog.Button label="Ok" onPress={handleOk} />
+                </Dialog.Container>
               </View>
               
                 <TouchableOpacity style={styles.LogInButton} onPress={() => {
