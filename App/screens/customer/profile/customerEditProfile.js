@@ -1,65 +1,74 @@
-import React, {useState} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/AntDesign';
+import firebase from 'firebase';
+import validator from 'validator';
+import { AuthContext } from '../../../functions/authProvider';
 import { Input } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import * as firebase from "firebase";
 import uuid from 'react-native-uuid';
 import { showMessage } from "react-native-flash-message";
 import Dialog from "react-native-dialog";
 
+//validator under work
+const validateFields = (email, password, firstname, lastname, address, contact, username) => {
+    const isValid = {
+        firstname: validator.matches(firstname, "^[a-z A-Z]+$"),
+        lastname: validator.matches(lastname, "^[a-z A-Z]+$"),
+        address: validator.matches(address, "^[0-9 a-z A-Z \.\,\-]+$"),
+        contact: validator.isMobilePhone(contact),
+        username: validator.matches(username, "^[0-9a-z\_]{1,15}$"),
+        email: validator.isEmail(email),
+        password: validator.isStrongPassword(password, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+        }),
+        
+    };
+    return isValid;
+};
 
-function customerEditProfile(props) {
-    const navigation = useNavigation();
+const customerEditProfile = ({navigation}) => {
 
-    //below statements are not used
-    const [firstName, setTextFN] = React.useState('');
-    const [lastName, setTextLN] = React.useState('');
-    const [address, setTextA] = React.useState('');
-    const [contactNo, setTextCN] = React.useState('');
-    const [userName, setTextUN] = React.useState('');
-    //const [email, setTextE] = React.useState('');
-    //const [password, setTextPW] = React.useState('');
-    //const [retypePassword, setTextRPW] = React.useState('');
+    //user state
+    const {user} = useContext(AuthContext);
+    const [userData, setUserData] = useState(null);
+    const [visible, setVisible] = useState(false);
+    const [URI, setURI] = useState(null);
 
-    //Email variables
-    const [emailField, setEmailField] = useState({
-        text: "", 
-        errorMessage: "",
-    });
 
-    //Password variables
-    const [passwordField, setPasswordField] = useState({
-        text: "", 
-        errorMessage: "",
-    });
-
-    //Re-enter password variables
-    const [passwordReentryField, setPasswordReentryField] = useState({
-        text: "", 
-        errorMessage: "",
-    });
+    //access current user
+    const getUser = async() => {
+        await firebase.firestore()
+        .collection('Customers')
+        .doc(user.uid)
+        .get()
+        .then((documentSnapshot) => {
+            if(documentSnapshot.exists){
+                console.log('User Data', documentSnapshot.data());
+                setUserData(documentSnapshot.data());
+            }
+        })      
+    }
 
     //For Dialog Box
-const [visible, setVisible] = useState(false);
+    const showDialog = () => {
+        setVisible(true);
+    };
 
-const showDialog = () => {
-    setVisible(true);
-};
+    const handleCancel = () => {
+        setVisible(false);
+    };
 
-const handleCancel = () => {
-    setVisible(false);
-};
-
-const handleUpdate = () => {
-    editProfile();
-    setVisible(false);
-};
-//End of Dialogbox
-
-const [URI, setURI] = React.useState(null);
+    //handleUpdate function
+    const handleUpdate = () => {
+        editProfile();
+        setVisible(false);
+    };
 
     const image = {
         url: "wew",
@@ -87,7 +96,6 @@ const [URI, setURI] = React.useState(null);
             setURI(result.uri);
         }
         console.log(result); // To Display the information of image on the console
-
     };
 
     //Function to upload to Firebase storage
@@ -101,7 +109,7 @@ const [URI, setURI] = React.useState(null);
                 snapshot.ref.getDownloadURL().then((downloadURL)=>{
                     console.log('File available at', downloadURL);
                     image.sURL = downloadURL;
-                    console.log('from upload image: ' + image.gURL)
+                    console.log('From upload image: ' + image.gURL)
                     resolve('wew');
                 });
             });
@@ -109,23 +117,42 @@ const [URI, setURI] = React.useState(null);
     };
 
     const editProfile = async () => {
+        //update current user from the firestore
+        //await uploadImage(URI, imageUUID)
+        //console.log('from add function: ', image.gURL);
+        //crud.createShop(image.gURL);
+        //navigation.goBack();
 
-        showMessage({
-            message: "Profile Updated Successfully",
-            type: "success",
-            color: "#fff",
-            position: "top",
-            floating: "true",
-            icon: { icon: "info", position: "left" },
-            autoHide:"true", 
-            duration: 2000,
-        });
-        await uploadImage(URI, imageUUID)
-
-        console.log('from add function: ', image.gURL);
-        crud.createShop(image.gURL);
-        navigation.goBack();
+        firebase.firestore()
+        .collection('Customers')
+        .doc(user.uid)
+        .update({
+            firstname: userData.firstname,
+            lastname: userData.lastname,
+            address: userData.address,
+            contact: userData.contact,
+            username: userData.username,
+            email: userData.email,
+            password: userData.password
+        })
+        .then(() => {
+            console.log("User updated...");
+            showMessage({
+                message: "Profile updated successfully",
+                type: "success",
+                position: "top",
+                statusBarHeight: 25,
+                floating: "true",
+                icon: { icon: "auto", position: "left" },
+                autoHide: "true", 
+                duration: 2000
+            });
+        })
     };
+
+    useEffect(() => {
+        getUser();
+    }, []);
 
     return (
         <SafeAreaView style={styles.droidSafeArea}>       
@@ -149,49 +176,54 @@ const [URI, setURI] = React.useState(null);
                     <Text style={styles.formTitles}>Basic Information</Text>
                     <View style={styles.textView}>
                         <Input
+                            //First Name input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'list-alt' }}
                             placeholder="First Name"
-                            onChangeText={text => setTextFN(text)}
-                            value={firstName}
+                            onChangeText={(text) => {setUserData({...userData, firstname: text});}}
+                            value={userData ? userData.firstname : ''}
                         />
                     </View>
                     <View style={styles.textView}>
                         <Input
+                            //Last Name input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'list-alt' }}
                             placeholder="Last Name"
-                            onChangeText={text => setTextLN(text)}
-                            value={lastName}
+                            onChangeText={(text) => {setUserData({...userData, lastname: text});}}
+                            value={userData ? userData.lastname : ''}
                         />
                     </View>
                     <View style={styles.textView}>
                         <Input
+                            //Address input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'home' }}
                             placeholder="Address"
-                            onChangeText={text => setTextA(text)}
-                            value={address}
+                            onChangeText={(text) => {setUserData({...userData, address: text});}}
+                            value={userData ? userData.address : ''}
                         />
                     </View>
                     <View style={styles.textView}>
                         <Input
+                            //Contact input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'phone' }}
                             placeholder="Contact Number"
-                            onChangeText={text => setTextCN(text)}
-                            value={contactNo}
+                            onChangeText={(text) => {setUserData({...userData, contact: text});}}
+                            value={userData ? userData.contact : ''}
                             keyboardType="numeric"
                         />
                     </View>
                     <Text style={styles.formTitles}>Account Information</Text>
                     <View style={styles.textView}>
                         <Input
+                            //Username input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'user' }}
-                            placeholder="User Name"
-                            onChangeText={text => setTextUN(text)}
-                            value={userName}
+                            placeholder="Username"
+                            onChangeText={(text) => {setUserData({...userData, username: text});}}
+                            value={userData ? userData.username : ''}
                         />
                     </View>
                     <View style={styles.textView}>
@@ -200,10 +232,9 @@ const [URI, setURI] = React.useState(null);
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'envelope' }}
                             placeholder="Email"
-                            text={emailField.text}
-                            onChangeText={(text) => {setEmailField({text});}}
-                            errorMessage={emailField.errorMessage}
-                            autoCompleteType="email"
+                            onChangeText={(text) => {setUserData({...userData, email: text});}}
+                            value={userData ? userData.email : ''}
+                            autoCompleteType="email"                           
                         />
                     </View>
                     <View style={styles.textView}>
@@ -212,10 +243,9 @@ const [URI, setURI] = React.useState(null);
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'lock' }}
                             secureTextEntry={true}
-                            placeholder="Password"
-                            text={passwordField.text}
-                            onChangeText={(text) => {setPasswordField({text});}}
-                            errorMessage={passwordField.errorMessage}
+                            placeholder="Password"              
+                            onChangeText={(text) => {setUserData({...userData, password: text});}}
+                            value={userData ? userData.password : ''}
                             autoCompleteType="password"
                         />
                     </View>
@@ -226,9 +256,7 @@ const [URI, setURI] = React.useState(null);
                             leftIcon={{ type: 'font-awesome', name: 'lock' }}
                             secureTextEntry={true}
                             placeholder="Re-enter Password"
-                            text={passwordReentryField.text}
                             onChangeText={(text) => {setPasswordReentryField({text});}}
-                            errorMessage={passwordReentryField.errorMessage}
                         />
                     </View>
                     
@@ -246,7 +274,7 @@ const [URI, setURI] = React.useState(null);
                     <Dialog.Button label="Ok" onPress={handleUpdate} />
                 </Dialog.Container>
             </View>
-            
+            {/*() => console.log("Profile Updated")*/}
         </SafeAreaView>
     );
 }

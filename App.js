@@ -1,15 +1,16 @@
-import React, {useState, useEffect} from 'react';
-import firebase from "firebase";
+import React, { useContext, useState, useEffect } from 'react';
+import firebase, { auth } from 'firebase';
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 
-import FlashMessage from "react-native-flash-message";
+import FlashMessage from 'react-native-flash-message';
 
 import SplashScreen from './App/screens/SplashScreen';
 import LogIn from './App/screens/LogIn';
 import SignupCustomer from './App/screens/signupCustomer';
 import Screens from './App/navigation/screensNavigation'
 import { Provider } from 'react-redux'
+import { AuthProvider, AuthContext } from './App/functions/authProvider';
 
 //for reducers
 import productsReducer from './App/functions/productsReducer';
@@ -18,7 +19,9 @@ import shopReducer from './App/functions/shopReducer';
 import cartReducer from './App/functions/cartReducer';
 import rewCartReducer from './App/functions/rewardsCartReducer';
 import { createStore, combineReducers } from 'redux';
+//import { LogBox } from 'react-native';
 
+//LogBox.ignoreAllLogs();
 // combine all reducers into one object
 const rootReducer = combineReducers({
   shops: shopReducer,
@@ -47,25 +50,27 @@ const AuthScreens = () => {
 
 //THIS SECTION IS A MOUNT CODE
 //Authentication function component
-function Authentication(){
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    useEffect(() => {
-      if (firebase.auth().currentUser){
-        setIsAuthenticated(true);
-      }
-      firebase.auth().onAuthStateChanged(user => {
-        console.log("Checking auth state...");
-        if(user) {
-          setIsAuthenticated(true);
-        }else{
-          setIsAuthenticated(false);
-        }
-      });
-    }, []);
+const Routes = () => {
 
-  return(
+  const {user, setUser} = useContext(AuthContext);
+  const [initializing, setInitializing] = useState(true);
+
+  const onAuthStateChanged = (user) => {
+    setUser(user);
+    if(initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
+
+  //insert loading feature here
+  if(initializing) return null;
+
+  return (
     <NavigationContainer>
-      {isAuthenticated ? <Screens/> : <AuthScreens/>}
+      {user ? <Screens/> : <AuthScreens/>}
     </NavigationContainer>
   );
 }
@@ -74,7 +79,10 @@ export default function App() {
     return (
       //call Authentication function component
       <Provider store={store}>
-        <Authentication />
+        <AuthProvider>
+          {/*child props of provider*/}
+          <Routes />
+        </AuthProvider>
         <FlashMessage position="top" animated={true} />
       </Provider>
     )

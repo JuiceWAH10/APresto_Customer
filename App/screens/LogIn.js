@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Image, ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon2 from 'react-native-vector-icons/AntDesign';
-import { useNavigation } from '@react-navigation/native';
-import validator from "validator";
-import { auth } from "firebase";
+import validator from 'validator';
+import { AuthContext } from '../functions/authProvider';
 import { Input } from 'react-native-elements';
-import { showMessage } from "react-native-flash-message";
 import Dialog from "react-native-dialog";
 
 //validation function of email
@@ -24,33 +22,11 @@ const validateFields = (email, password) => {
   return isValid;
 };
 
-//log in function to have access
-const login = (email, password) => {
-  auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => {
-          console.log("Logged in");
-      })
-      .catch(() => {
-        showMessage({
-          message: "Account does not exist",
-          type: "warning",
-          position: "bottom",
-          floating: "true",
-          icon: { icon: "info", position: "left" },
-          autoHide:"true", 
-          duration: 1000,
-        });
-        console.log("No user");  
-    })
-
-};
-
-function LogIn(props) {
-    //const [userName] = React.useState('');
-    //const [passWord, setTextPW] = React.useState('');
+const LogIn = ({navigation}) => {
+    //calls login function from authProvider.js
+    const {login} = useContext(AuthContext);
     const [toggleCheckBox, setToggleCheckBox] = useState({check: false});
-    const navigation = useNavigation();
+    const [visible, setVisible] = useState(false);
 
     //Email variables
     const [emailField, setEmailField] = useState({
@@ -63,9 +39,6 @@ function LogIn(props) {
       text: "", 
       errorMessage: "",
     });
-
-    //For DialogBox
-    const [visible, setVisible] = useState(false);
 
     const showDialog = () => {
         setVisible(true);
@@ -142,8 +115,8 @@ function LogIn(props) {
                   <Text> Log in as store owner. </Text>
                 </View> */}
 
-                <TouchableOpacity style={styles.profileButton} onPress={showDialog} >
-                  <Text style={{color: '#071964', fontSize: 13, marginVertical: 15}}>Forgot Password?</Text>
+                <TouchableOpacity style={styles.forgotButton} onPress={showDialog} >
+                  <Text style={{color: '#071964', fontSize: 13, marginVertical: 14}}>Forgot Password?</Text>
                 </TouchableOpacity>
 
                 <Dialog.Container visible={visible}>
@@ -159,15 +132,15 @@ function LogIn(props) {
 
                   let isAllValid = true;
                   if(!isValid.email){
-                    console.log("Please enter a valid email...")
-                    emailField.errorMessage = "Incorrect Email. Please enter a valid email";
+                    console.log("Input a correct email...")
+                    emailField.errorMessage = "Incorrect email. Please enter a valid email";
                     setEmailField({...emailField})
                     isAllValid = false;
                   }
 
                   if(!isValid.password){
-                    console.log("Password must be at least 8 long characters with numbers")
-                    passwordField.errorMessage = "Incorrect Password. Makke sure you entered the password correctly.";
+                    console.log("Input a correct password...")
+                    passwordField.errorMessage = "Incorrect password. Make sure you enter the correct password";
                     setPasswordField({...passwordField})
                     isAllValid = false;
                   }
@@ -258,7 +231,7 @@ const styles = StyleSheet.create({
   },
   LogInContainer: {
     width: wp('80%'),
-    height: hp('40%'),
+    height: hp('45%'),
     backgroundColor: '#fff',
     borderRadius: 30,
     alignItems: 'center',
@@ -298,6 +271,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  forgotButton: {
+    position: "absolute",
+    bottom: 14
   }
 });
 

@@ -1,15 +1,36 @@
-import React, {useState} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Image, ImageBackground, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { auth } from "firebase";
-import { useNavigation } from '@react-navigation/native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { AuthContext } from '../../functions/authProvider';
+import firebase from 'firebase';
 import Dialog from "react-native-dialog";
 
+const profile = ({navigation, route}) => {
 
-function profile(props) {
-    const navigation = useNavigation();
+    //user state
+    const {user, logout} = useContext(AuthContext);
+    const [userData, setUserData] = useState(null);
     const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    //access current user
+    const getUser = async() => {
+        await firebase.firestore()
+        .collection('Customers')
+        .doc(route.params ? route.params.userId : user.uid)
+        .get()
+        .then((documentSnapshot) => {
+            if(documentSnapshot.exists){
+                setUserData(documentSnapshot.data());
+            }
+        })      
+    }
+
+    useEffect(() => {
+        getUser();
+        navigation.addListener("focus", () => setLoading(!loading));
+    }, [navigation, loading]);
 
     const showDialog = () => {
         setVisible(true);
@@ -20,7 +41,8 @@ function profile(props) {
     };
 
     const handleLogout = () => {
-        auth().signOut();
+        /*calls logout function from authProvider.js*/
+        logout();
         setVisible(false);
     };
 
@@ -33,8 +55,9 @@ function profile(props) {
                     <Image style={styles.profileProfileImage}
                         source={require('../../assets/Store.jpg')}>
                     </Image>
-                    <Text style={styles.profileUsername}>vince</Text>
-                    <Text style={styles.profileFullname}>John Vincent Sta Ana</Text>
+                    {/*display user data*/}
+                    <Text style={styles.profileUsername}>{userData ? userData.username || 'APresto' : 'APresto'}</Text>
+                    <Text style={styles.profileFullname}>{userData ? userData.firstname || 'U  S' : 'U  S'}  {userData ? userData.lastname || 'E  R' : 'E  R'}</Text>
                     <View style={styles.profileButtonContainer}>
                         <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('customerEditProfile')} >
                             <Icon name="user" size={20} color="#fff" />
