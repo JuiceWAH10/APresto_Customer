@@ -267,11 +267,10 @@ const customerEditProfile = ({navigation}) => {
                 <TouchableOpacity style={styles.button} onPress={showDialog}>
                     <Text style={styles.buttonLabel}>Update Profile</Text>
                 </TouchableOpacity>
-                <Dialog.Container visible={visible}>
-                    <Dialog.Title>Edit Profile</Dialog.Title>
-                    <Dialog.Description>Do you really want to update Profile?</Dialog.Description>
-                    <Dialog.Button label="Cancel" onPress={handleCancel} />
-                    <Dialog.Button label="Ok" onPress={handleUpdate} />
+                <Dialog.Container contentStyle={{height: 110, paddingTop: 12, paddingRight: 19, alignItems: 'center', justifyContent:'center', borderRadius: 15}} dialogAnimation={"FadeAnimation"} visible={visible}>
+                    <Dialog.Title style={{fontSize: 16, color: '#071964'}}>Do you really want to update profile?</Dialog.Title>
+                    <Dialog.Button style={{marginRight: 30, marginLeft: 20, fontSize: 16, fontWeight: "bold", color: '#071964'}} label="Cancel" onPress={handleCancel}/>
+                    <Dialog.Button style={{marginRight: 25, marginLeft: 25, fontSize: 16, fontWeight: "bold", color: '#071964'}} label="Ok" onPress={handleUpdate} />
                 </Dialog.Container>
             </View>
             {/*() => console.log("Profile Updated")*/}
@@ -367,7 +366,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         height: hp('10%'),
         width: wp('95%'),
-    },
+    }
 })
 
 export default customerEditProfile;

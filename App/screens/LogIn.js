@@ -119,11 +119,11 @@ const LogIn = ({navigation}) => {
                   <Text style={{color: '#071964', fontSize: 13, marginVertical: 14}}>Forgot Password?</Text>
                 </TouchableOpacity>
 
-                <Dialog.Container visible={visible}>
-                  <Dialog.Title>Forgot Password</Dialog.Title>
-                  <Dialog.Description>Do you want to send an a reset confirmation to you email?</Dialog.Description>
-                  <Dialog.Button label="Cancel" onPress={handleCancel} />
-                  <Dialog.Button label="Ok" onPress={handleOk} />
+                <Dialog.Container contentStyle={{height: 110, paddingTop: 12, paddingRight: 19, alignItems: 'center', justifyContent:'center', borderRadius: 15}} dialogAnimation={"FadeAnimation"} visible={visible}>
+                  <Dialog.Title style={{fontSize: 16, color: '#071964'}}>Never Forget.</Dialog.Title>
+
+                  <Dialog.Button style={{marginRight: 30, marginLeft: 20, fontSize: 16, fontWeight: "bold", color: '#071964'}} label="Cancel" onPress={handleCancel} />
+                  <Dialog.Button style={{marginRight: 30, marginLeft: 20, fontSize: 16, fontWeight: "bold", color: '#071964'}} label="Ok" onPress={handleOk} />
                 </Dialog.Container>
               </View>
               
