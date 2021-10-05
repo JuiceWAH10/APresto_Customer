@@ -19,9 +19,10 @@ import shopReducer from './App/functions/shopReducer';
 import cartReducer from './App/functions/cartReducer';
 import rewCartReducer from './App/functions/rewardsCartReducer';
 import { createStore, combineReducers } from 'redux';
-//import { LogBox } from 'react-native';
+import { LogBox } from 'react-native';
 
-//LogBox.ignoreAllLogs();
+LogBox.ignoreLogs(["Setting a timer for a long period of time, i.e. multiple minutes, is a performance and correctness issue on Android as it keeps the timer module awake, and timers can only be called when the app is in the foreground."]);
+
 // combine all reducers into one object
 const rootReducer = combineReducers({
   shops: shopReducer,
