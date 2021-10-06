@@ -136,7 +136,6 @@ const customerEditProfile = ({navigation}) => {
             password: userData.password
         })
         .then(() => {
-            console.log("User updated...");
             showMessage({
                 message: "Profile updated successfully",
                 type: "success",
@@ -147,6 +146,7 @@ const customerEditProfile = ({navigation}) => {
                 autoHide: "true", 
                 duration: 2000
             });
+            console.log("User account updated...");
         })
     };
 

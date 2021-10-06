@@ -3,8 +3,10 @@ import { Image, ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacit
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import validator from 'validator';
+import { auth } from 'firebase';
 import { AuthContext } from '../functions/authProvider';
 import { Input } from 'react-native-elements';
+import { showMessage } from 'react-native-flash-message';
 import Dialog from "react-native-dialog";
 
 //validation function of email
@@ -40,6 +42,9 @@ const LogIn = ({navigation}) => {
       errorMessage: "",
     });
 
+    //Recovery Email variables
+    const [recoveryEmail, setRecoveryEmail] = useState("");
+
     const showDialog = () => {
         setVisible(true);
     };
@@ -48,16 +53,41 @@ const LogIn = ({navigation}) => {
         setVisible(false);
     };
     
-    const handleOk = () => {
-        //Enter code here for sending reset confirmation
+    const handleOk = async () => {
+        //firebase password reset
+        await auth()
+        .sendPasswordResetEmail(recoveryEmail)
+        .then(() => {
+            showMessage({
+                message: "Account recovery link sent",
+                description: "Please check your email to retrieve your account",
+                type: "success",
+                position: "bottom",
+                statusBarHeight: 20,
+                floating: "true",
+                icon: { icon: "auto", position: "left" },
+                autoHide: "true", 
+                duration: 2500
+            });
+            console.log("User account recovery link delivered...");
+        })
+        .catch((error) => {
+            showMessage({
+                message: "Account does not exist",
+                type: "warning",
+                position: "top",
+                statusBarHeight: 30,
+                floating: "true",
+                icon: { icon: "info", position: "left" },
+                autoHide: "true", 
+                duration: 2000
+            });
+            console.log("Account recovery failed...", error);
+        });
+        setRecoveryEmail("")
         setVisible(false);
     };
         //End DialogBox
-
-    const handleForgotPass = (email : string) => {
-        console.log("email");
-        console.log(email);
-    }
 
     return (
       <ImageBackground
@@ -126,7 +156,7 @@ const LogIn = ({navigation}) => {
 
                 <Dialog.Container contentStyle={{height: 210, paddingTop: 12, paddingRight: 19, alignItems: 'center', justifyContent:'center', borderRadius: 15}} visible={visible}>
                   <Dialog.Title style={{marginBottom: 5, fontSize: 18, fontWeight: "bold"}}>Account Recovery</Dialog.Title>
-                  <Dialog.Input style={{paddingLeft: 10, fontSize: 16}} label={"Please enter your email to receive a reset password link"} onChangeText={(email : string) => handleForgotPass(email)} placeholder="Email"></Dialog.Input>
+                  <Dialog.Input style={{paddingLeft: 10, fontSize: 16}} label={"Please enter your email to receive a reset password link"} value={recoveryEmail} onChangeText={(text) => setRecoveryEmail(text)}></Dialog.Input>
                   <Dialog.Button style={{marginRight: 30, marginLeft: 20, paddingTop: 0, fontSize: 16, fontWeight: "bold", color: '#071964'}} label="Cancel" onPress={handleCancel} />
                   <Dialog.Button style={{marginRight: 25, marginLeft: 25, paddingTop: 0, fontSize: 16, fontWeight: "bold", color: '#071964'}} label="Ok" onPress={handleOk} />
                 </Dialog.Container>
