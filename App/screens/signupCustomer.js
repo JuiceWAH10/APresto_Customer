@@ -90,7 +90,7 @@ const signupCustomer = ({navigation}) => {
             </View>
             <View style={[styles.formContainer, {flex:15}]}>          
                 <Text style={styles.title}>Sign Up</Text>
-                <Text style={styles.subtitle}>Provide the needed information to continue.</Text>
+                <Text style={styles.subtitle}>Provide the needed information to continue</Text>
                 <ScrollView style={styles.form}>
                     <Text style={styles.formTitles}>Basic Information</Text>
                     <View style={styles.textView}>

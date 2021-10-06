@@ -136,7 +136,6 @@ const customerEditProfile = ({navigation}) => {
             password: userData.password
         })
         .then(() => {
-            console.log("User updated...");
             showMessage({
                 message: "Profile updated successfully",
                 type: "success",
@@ -147,6 +146,7 @@ const customerEditProfile = ({navigation}) => {
                 autoHide: "true", 
                 duration: 2000
             });
+            console.log("User account updated...");
         })
     };
 
@@ -267,7 +267,7 @@ const customerEditProfile = ({navigation}) => {
                 <TouchableOpacity style={styles.button} onPress={showDialog}>
                     <Text style={styles.buttonLabel}>Update Profile</Text>
                 </TouchableOpacity>
-                <Dialog.Container contentStyle={{height: 110, paddingTop: 12, paddingRight: 19, alignItems: 'center', justifyContent:'center', borderRadius: 15}} dialogAnimation={"FadeAnimation"} visible={visible}>
+                <Dialog.Container contentStyle={{height: 110, paddingTop: 12, paddingRight: 19, alignItems: 'center', justifyContent:'center', borderRadius: 15}} visible={visible}>
                     <Dialog.Title style={{fontSize: 16, color: '#071964'}}>Do you really want to update profile?</Dialog.Title>
                     <Dialog.Button style={{marginRight: 30, marginLeft: 20, fontSize: 16, fontWeight: "bold", color: '#071964'}} label="Cancel" onPress={handleCancel}/>
                     <Dialog.Button style={{marginRight: 25, marginLeft: 25, fontSize: 16, fontWeight: "bold", color: '#071964'}} label="Ok" onPress={handleUpdate} />

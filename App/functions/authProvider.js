@@ -36,7 +36,6 @@ return(
                     });
                     console.log("Login failed...", error);  
                 }
-
             },
             //sign up function to create user/ CREATE ACCOUNT FUNCTION
             register: async (email, password, firstname, lastname, address, contact, username) => {
@@ -65,7 +64,7 @@ return(
                         floating: "true",
                         icon: { icon: "auto", position: "left" },
                         autoHide: "true", 
-                        duration: 2000
+                        duration: 2500
                     });
                     console.log("Signup failed...", error);
                 }
