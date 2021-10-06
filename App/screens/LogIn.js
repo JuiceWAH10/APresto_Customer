@@ -54,6 +54,11 @@ const LogIn = ({navigation}) => {
     };
         //End DialogBox
 
+    const handleForgotPass = (email : string) => {
+        console.log("email");
+        console.log(email);
+    }
+
     return (
       <ImageBackground
           style={styles.BGImage}
@@ -119,11 +124,11 @@ const LogIn = ({navigation}) => {
                   <Text style={{color: '#071964', fontSize: 13, marginVertical: 14}}>Forgot Password?</Text>
                 </TouchableOpacity>
 
-                <Dialog.Container contentStyle={{height: 110, paddingTop: 12, paddingRight: 19, alignItems: 'center', justifyContent:'center', borderRadius: 15}} dialogAnimation={"FadeAnimation"} visible={visible}>
-                  <Dialog.Title style={{fontSize: 16, color: '#071964'}}>Never Forget.</Dialog.Title>
-
-                  <Dialog.Button style={{marginRight: 30, marginLeft: 20, fontSize: 16, fontWeight: "bold", color: '#071964'}} label="Cancel" onPress={handleCancel} />
-                  <Dialog.Button style={{marginRight: 30, marginLeft: 20, fontSize: 16, fontWeight: "bold", color: '#071964'}} label="Ok" onPress={handleOk} />
+                <Dialog.Container contentStyle={{height: 210, paddingTop: 12, paddingRight: 19, alignItems: 'center', justifyContent:'center', borderRadius: 15}} visible={visible}>
+                  <Dialog.Title style={{marginBottom: 5, fontSize: 18, fontWeight: "bold"}}>Account Recovery</Dialog.Title>
+                  <Dialog.Input style={{paddingLeft: 10, fontSize: 16}} label={"Please enter your email to receive a reset password link"} onChangeText={(email : string) => handleForgotPass(email)} placeholder="Email"></Dialog.Input>
+                  <Dialog.Button style={{marginRight: 30, marginLeft: 20, paddingTop: 0, fontSize: 16, fontWeight: "bold", color: '#071964'}} label="Cancel" onPress={handleCancel} />
+                  <Dialog.Button style={{marginRight: 25, marginLeft: 25, paddingTop: 0, fontSize: 16, fontWeight: "bold", color: '#071964'}} label="Ok" onPress={handleOk} />
                 </Dialog.Container>
               </View>
               

@@ -21,7 +21,10 @@ import rewCartReducer from './App/functions/rewardsCartReducer';
 import { createStore, combineReducers } from 'redux';
 import { LogBox } from 'react-native';
 
-LogBox.ignoreLogs(["Setting a timer for a long period of time, i.e. multiple minutes, is a performance and correctness issue on Android as it keeps the timer module awake, and timers can only be called when the app is in the foreground."]);
+LogBox.ignoreLogs([
+  "Setting a timer for a long period of time, i.e. multiple minutes, is a performance and correctness issue on Android as it keeps the timer module awake, and timers can only be called when the app is in the foreground.",
+  "Failed prop type: Invalid props.style key `fontSize` supplied to `DialogInput`."
+]);
 
 // combine all reducers into one object
 const rootReducer = combineReducers({
