@@ -17,26 +17,40 @@ import { useDispatch, useSelector } from 'react-redux';
 import IndivReward from '././importScreens/indivReward';
 
 function rewards(props) {
-    const [searchQuery, setSearchQuery] = useState('');
+
+    const navigation = useNavigation();
+    const {store_ID, owner_ID, store_Name, address, specialty, imgLink} = props.route.params;
+
+    const [searchQuery, setSearchQuery] = useState("");
     const [storeList, setStoreList] = useState([]);
-    const onChangeSearch = query => setSearchQuery(query);
+    const [shopData, setShopData] = useState(storeList);
 
     const dispatch = useDispatch();
     //(juswa) fetch data from redux store in App.js using useSelector. the data is from the state managed by reducers
 
-    useEffect(() => {
-        firebase.firestore()
-            .collection('Stores')
-            .onSnapshot(result => {
-                const st = [];
-                result.forEach(function (store){         
-                    st.push(store.data());
-                });
-                console.log(st);
-                setStoreList(st);
+    const onChangeSearch = (query) => {
+        setSearchQuery(query);
+        
+        if(query != " "){
+            setShopData(
+                storeList.filter((shop) => {
+                shop.store_Name.toLowerCase().includes(query.toLowerCase()) ||
+                shop.speciality.toLowerCase().includes(query.toLowerCase());
+            })
+            );       
+        }else{
+            setShopData(storeList);
+        }
+    }
 
-            });
-    }, []); 
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await firebase.firestore().collection('Stores').get();
+            setStoreList(data.docs.map((doc) => ({...doc.data(), id:doc.id})));
+        };
+
+        fetchData();
+    },[]); 
 
     return (
         <SafeAreaView style={styles.droidSafeArea}>
@@ -44,8 +58,8 @@ function rewards(props) {
                 <Searchbar
                     style={styles.searchBar}
                     placeholder="Search"
-                    onChangeText={onChangeSearch}
-                    value={searchQuery}
+                    onChangeText={(e) => onChangeSearch(e.target.value)}
+                    //value={searchQuery}
                 />
             </View>
 

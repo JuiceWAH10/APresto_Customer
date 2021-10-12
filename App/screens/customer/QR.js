@@ -13,7 +13,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import firebase from 'firebase';
 import jsonpack from 'jsonpack';
 
-import { AuthContext } from '../../../functions/authProvider';
+import { AuthContext } from '../../functions/authProvider';
 import * as cartAction from '../../functions/cartFunction';
 import * as rewardCart from '../../functions/rewardsCartFunction';
 
@@ -63,7 +63,7 @@ function QR(props) {
     let packed = jsonpack.pack(orderDetails)
     return (
         <SafeAreaView style={styles.droidSafeArea}>
-            <ImageBackground style={styles.container} source={require('../../../assets/images/splashScreenDark.jpg')}>
+            <ImageBackground style={styles.container} source={require('../../assets/images/splashScreenDark.jpg')}>
                 <View style={styles.qrContainer}>
                     <Text style={styles.qrLabel}>Come to your suki store and have them scan this QR code</Text>
                         <QRCode 
