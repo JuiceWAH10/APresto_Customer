@@ -5,6 +5,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { AuthContext } from '../../functions/authProvider';
 import firebase from 'firebase';
 import Dialog from "react-native-dialog";
+import QRCode from "react-qr-code";
 
 const profile = ({navigation, route}) => {
 
@@ -92,6 +93,13 @@ const profile = ({navigation, route}) => {
                 {/* Under development */}
                 {/* Insert Code here for infos of the Customers */}
                 {/* Additional ideas needed here */}
+                <View style={styles.qrContainer}>
+                    <Text style={styles.qrLabel}>Your personal APresto QR</Text>
+                        <QRCode 
+                            value = {{"QR_Type": "customer_ID", "customer_ID":user.uid, "username": userData.username}}
+                        />
+                </View>
+
                 
                 {/* Banner */}
                 <ImageBackground style={styles.bannerBgImage}
@@ -249,6 +257,22 @@ const styles = StyleSheet.create({
         fontSize: 12,
         paddingLeft: wp('5%'),
         paddingRight: wp('5%'),
+    },
+    qrContainer:{
+        alignSelf: "center",
+        backgroundColor: '#fff',
+        borderRadius: 30,
+        height: 400,
+        width: wp('90%'),
+        alignItems: "center",
+        paddingTop: hp('2%'),
+        paddingBottom: hp('2%'),
+        top: hp('20%')
+    },
+    qrLabel:{
+        textAlign: "center",
+        fontSize: 16,
+        marginBottom: 20
     },
     titleTransact: {
         textAlign: "center",

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { 
     ImageBackground,
     SafeAreaView,
@@ -11,18 +11,32 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Searchbar } from 'react-native-paper';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-
+import firebase from 'firebase';
 import { useDispatch, useSelector } from 'react-redux';
 
 import IndivReward from '././importScreens/indivReward';
 
 function rewards(props) {
-    const [searchQuery, setSearchQuery] = React.useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [storeList, setStoreList] = useState([]);
     const onChangeSearch = query => setSearchQuery(query);
 
     const dispatch = useDispatch();
     //(juswa) fetch data from redux store in App.js using useSelector. the data is from the state managed by reducers
-    const allShops = useSelector(state => state.shops.allShops);
+
+    useEffect(() => {
+        firebase.firestore()
+            .collection('Stores')
+            .onSnapshot(result => {
+                const st = [];
+                result.forEach(function (store){         
+                    st.push(store.data());
+                });
+                console.log(st);
+                setStoreList(st);
+
+            });
+    }, []); 
 
     return (
         <SafeAreaView style={styles.droidSafeArea}>
@@ -43,17 +57,16 @@ function rewards(props) {
                         <Text style={styles.shopListTitle}>Shops you have Points</Text>
                     </View>
                 }
-                data={allShops}
-                keyExtractor={item => item.shop_ID}
+                data={storeList}
+                keyExtractor={item => item.store_ID}
                 renderItem={itemData => 
                     <IndivReward
-                        shop_ID = {itemData.item.shop_ID}
+                        store_ID = {itemData.item.store_ID}
                         owner_ID = {itemData.item.owner_ID}
-                        shopName = {itemData.item.shopName}
+                        store_Name = {itemData.item.store_Name}
                         address = {itemData.item.address}
                         specialty = {itemData.item.specialty}
-                        viewShop = {() => {dispatch(cartAction.addToCart(products.products))}}
-                        viewDetails = {() => {}}
+                        imgLink = {itemData.item.imgLink}
                     />}
             />
                 {/* Banner */}

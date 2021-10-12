@@ -15,24 +15,26 @@ function indivShop(props) {
     const navigation = useNavigation();
     return (
         <TouchableOpacity onPress={() => 
-            navigation.navigate('shopItems', {
-                shop_ID: props.shop_ID,
+            navigation.navigate('shopItems', 
+            {
+                store_ID: props.store_ID,
                 owner_ID: props.owner_ID,
-                shopName: props.shopName,
+                store_Name: props.store_Name,
                 address: props.address,
-                specialty: props.specialty
+                specialty: props.specialty,
+                imgLink: props.imgLink
             })
         }>
             <View style={styles.container}>
                 <Image style={styles.shopImage}
-                    source={require('../../../assets/DummyShop.jpg')}>
+                    source={{uri: props.imgLink}}>
                 </Image>
                 <View style={styles.shopLine1}>
-                    <Text style={styles.shopName}>{props.shopName}</Text>
-                    <View style={styles.shopReview}>
+                    <Text style={styles.shopName}>{props.store_Name}</Text>
+{/*                    <View style={styles.shopReview}>
                         <Icon name="star" size={20} color="#fd4140" />
                         <Text style={styles.shopReviewScore}>4.5 / 5</Text>
-                    </View>
+    </View>*/}
                 </View>
                 <Text style={styles.shopAddress}>{props.address}</Text>
                 <Text style={styles.shopSpecialty}>{props.specialty}</Text>

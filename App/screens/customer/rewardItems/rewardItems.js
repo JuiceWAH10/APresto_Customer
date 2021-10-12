@@ -27,7 +27,7 @@ import * as rewCartFunction from '../../../functions/rewardsCartFunction';
 
 function rewardItems(props) {
     const navigation = useNavigation();
-    const {shop_ID, owner_ID, shopName, address, specialty} = props.route.params;
+    const {store_ID, owner_ID, store_Name, address, specialty, imgLink} = props.route.params;
 
     const scrollPosition = useRef(new Animated.Value(0)).current;
     const minHeaderHeight = 0
@@ -56,26 +56,21 @@ function rewardItems(props) {
     */}
 
     //fetch data from firestore
-    const [products, setProducts] = useState([]);
+    const [rewards, setRewards] = useState([]);
 
     useEffect(()=>{
         const subscriber = firebase.firestore()
         .collection('Rewards')
+        .where('shop_ID', '==', store_ID)
         .onSnapshot(querySnapshot => {
             const prod = [];
             querySnapshot.forEach(function (product){         
                 prod.push(product.data());
             });
-            setProducts(prod);
+            setRewards(prod);
         });
         return () => subscriber();
     }, []);
-
-    const rewards = products.filter((prod) => {
-        if(prod.shop_ID === shop_ID){
-            return prod;
-        }
-    })
 
     return (
         <SafeAreaView style={styles.droidSafeArea}>
@@ -88,7 +83,7 @@ function rewardItems(props) {
                     <TouchableOpacity onPress={() => "pressed"} >  
                         <Icon2 name="heart" size={25} color="#ee4b43" />
                     </TouchableOpacity>    
-                    <TouchableOpacity onPress={() => navigation.navigate('rewardItemsCart')} > 
+                    <TouchableOpacity onPress={() => navigation.navigate('checkoutPage', {store_ID: store_ID})} > 
                         <Icon2 name="shoppingcart" size={25} color="#ee4b43" />
                     </TouchableOpacity>
                 </View>
@@ -113,9 +108,9 @@ function rewardItems(props) {
                     opacity: opacity,
                     }}>
                     <ImageBackground style={styles.headerBgImage}
-                        source={require('../../../assets/DummyShop.jpg')}>
+                        source={{uri:imgLink}}>
                         <View style={styles.darken}>
-                            <Text style={styles.headerLabel}>{shopName}</Text>
+                            <Text style={styles.headerLabel}>{store_Name}</Text>
                             <Text style={styles.headerLabelBig}>100 Points</Text>
                             <View style={styles.buttonContainer}>
                                 <TouchableOpacity style={styles.button} onPress={() => "pressed"} >
@@ -137,13 +132,13 @@ function rewardItems(props) {
                 contentInsetAdjustmentBehavior="automatic"
                 style={[styles.container]}>
 
-                    {/* Popular Rewards */}
+                    {/* Popular Rewards 
                     <View style={styles.popularItemsContainer}>
                         <View style={styles.popularItemsTitleContainer}>
-                            {/* <Icon3 name="fire" size={40} color="#fd4140" /> */}
+                            {/* <Icon3 name="fire" size={40} color="#fd4140" /> 
                             <Text style={styles.popularItemsTitle}>Popular Rewards</Text>
                         </View>
-                        {/* Horizontal Scrollview for Popular Rewards */}
+                        {/* Horizontal Scrollview for Popular Rewards 
                         <FlatList 
                             horizontal={true} 
                             style={styles.popularItems} 
@@ -153,15 +148,15 @@ function rewardItems(props) {
                                 <PopularRewardItem
                                     reward_Name = {itemData.item.reward_Name}
                                     pointsReq = {itemData.item.pointsReq}
-                                    definition = {itemData.item.definition}
+                                    definition = {itemData.item.description}
                                     imgLink = {itemData.item.imgLink}
                                     redeemToCart = {() => {dispatch(rewCartFunction.redeemToCart(itemData.item))}}
                                 />
                             }
                         />
-                        {/* End of Horizonal Scrollview */}
+                        {/* End of Horizonal Scrollview 
                     </View>
-                    {/* End of Popular Rewards */}
+                    {/* End of Popular Rewards 
 
                     <Text style={styles.textInfo}>Do you like the products and rewards offered by this shop?
                      Follow them for them to know how you feel!</Text>

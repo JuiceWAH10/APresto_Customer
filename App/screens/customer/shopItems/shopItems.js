@@ -10,7 +10,8 @@ import {
     Text, 
     TouchableOpacity, 
     View,
-    FlatList
+    FlatList,
+    LogBox
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/AntDesign';
@@ -24,9 +25,11 @@ import AllShopItem from './././importShopItems/allShopItem';
 
 import * as cartAction from '../../../functions/cartFunction';
 
+LogBox.ignoreAllLogs();
+
 function shopItems(props) {
     const navigation = useNavigation();
-    const {shop_ID, owner_ID, shopName, address, specialty} = props.route.params;
+    const {store_ID, owner_ID, store_Name, address, specialty, imgLink} = props.route.params;
 
     const scrollPosition = useRef(new Animated.Value(0)).current;
     const minHeaderHeight = 0
@@ -45,23 +48,41 @@ function shopItems(props) {
 
     const dispatch = useDispatch();
     {/*
-    //(juswa) fetch data from redux store in App.js using useSelector. the data is from the state managed by reducers
+    function print(){
+        console.log('pressed')
+        const data = firebase.firestore().collection('Products').where('shop_ID', '==', shop_ID).get().then(querySnapshot =>{
+            querySnapshot.forEach((doc)=>{
+                console.log("pressedwew",doc.data())
+            })
+        }).catch((error) => {
+            console.log("Error getting documents: ", error);
+        });
+        console.log('pressed2')
+        return ()=> data();
+    }
+
+     //(juswa) fetch data from redux store in App.js using useSelector. the data is from the state managed by reducers
     const getProducts = useSelector(state => state.products.allProducts);
-    const products = getProducts.filter((prod) => {
+    const sortedProducts = getProducts.filter((prod) => {
         if(prod.shop_ID === shop_ID){
             return prod;
         }
     })
 
-    
+    const sortedProducts = products.filter((prod) => {
+        if(prod.shop_ID === shop_ID){
+            return prod;
+        }
+    })
+
     */}
+    const [sortedProducts, setProducts] = useState([]);
 
     //fetch data from firestore
-    const [products, setProducts] = useState([]);
-
     useEffect(()=>{
         const subscriber = firebase.firestore()
         .collection('Products')
+        .where('shop_ID', '==', store_ID)
         .onSnapshot(querySnapshot => {
             const prod = [];
             querySnapshot.forEach(function (product){         
@@ -72,12 +93,6 @@ function shopItems(props) {
         return () => subscriber();
     }, []);
 
-    const sortedProducts = products.filter((prod) => {
-        if(prod.shop_ID === shop_ID){
-            return prod;
-        }
-    })
-
     return (
         <SafeAreaView style={styles.droidSafeArea} >
             {/* Top Navigation */}
@@ -86,10 +101,10 @@ function shopItems(props) {
                     <Icon2 name="left" size={30} color="#ee4b43" />
                 </TouchableOpacity>
                 <View style={styles.topNavRight}>
-                    <TouchableOpacity onPress={() => "pressed"} >  
+                    <TouchableOpacity onPress={() => console.log('pressed')} >  
                         <Icon2 name="heart" size={25} color="#ee4b43" />
                     </TouchableOpacity>    
-                    <TouchableOpacity onPress={() => navigation.navigate('shopItemsCart')} > 
+                    <TouchableOpacity onPress={() => navigation.navigate('checkoutPage', {store_ID: store_ID})} > 
                         <Icon2 name="shoppingcart" size={25} color="#ee4b43" />
                     </TouchableOpacity>
                 </View>
@@ -114,9 +129,9 @@ function shopItems(props) {
                     opacity: opacity,
                     }}>
                     <ImageBackground style={styles.headerBgImage}
-                        source={require('../../../assets/DummyShop.jpg')}>
+                        source={{uri:imgLink}}>
                         <View style={styles.darken}>
-                            <Text style={styles.headerLabel}>{shopName}</Text>
+                            <Text style={styles.headerLabel}>{store_Name}</Text>
                             <Text style={styles.headerLabelSmall}>{address}</Text>
                             <View style={styles.buttonContainer}>
                                 <TouchableOpacity style={styles.button} onPress={() => "pressed"} >
@@ -129,11 +144,12 @@ function shopItems(props) {
                                     onPress={() => 
                                         navigation.navigate('rewardItems', 
                                             {
-                                                shop_ID: shop_ID,
+                                                store_ID: store_ID,
                                                 owner_ID: owner_ID,
                                                 shopName: shopName,
                                                 address: address,
-                                                specialty: specialty
+                                                specialty: specialty,
+                                                imgLink: imgLink
                                             }
                                         )
                                     } 
@@ -159,13 +175,13 @@ function shopItems(props) {
                 nestedScrollEnabled={true}
             >
                     
-                    {/* Popular Items */}
+                    {/* Popular Items 
                     <View style={styles.popularItemsContainer}>
                         <View style={styles.popularItemsTitleContainer}>
-                            {/* <Icon3 name="fire" size={40} color="#fd4140" /> */}
+                            {/* <Icon3 name="fire" size={40} color="#fd4140" /> 
                             <Text style={styles.popularItemsTitle}>Popular Items</Text>
                         </View>
-                        {/* Horizontal Scrollview for Popular Items */}
+                        {/* Horizontal Scrollview for Popular Items 
                         <FlatList 
                             horizontal={true} 
                             style={styles.popularItems} 
@@ -182,12 +198,15 @@ function shopItems(props) {
                             }
                         />
 
-                        {/* End of Horizonal Scrollview */}
+                        {/* End of Horizonal Scrollview 
                     </View>
-                    {/* End of Popular Items */}
+                    {/* End of Popular Items 
+                    
 
                     <Text style={styles.textInfo}>Do you like the products and rewards offered by this shop?
                      Follow them for them to know how you feel!</Text>
+                     
+                     */}
 
                     {/* All Items */}
                     <View style={styles.allItemsContainer}>

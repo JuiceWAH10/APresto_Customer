@@ -14,6 +14,8 @@ import RewardItemsQR from '../screens/customer/rewardItems/rewardItemsQR';
 import CustomerEditProfile from '../screens/customer/profile/customerEditProfile';
 import LikedShopList from '../screens/customer/likedShops/likedShopList';
 import NearMeList from '../screens/customer/nearMe/nearMeList';
+import CheckoutPage from '../screens/customer/checkoutPage';
+import QR from '../screens/customer/QR';
 
 const Stack = createStackNavigator();
 
@@ -31,6 +33,8 @@ export default Screens = () => {
       <Stack.Screen name="customerEditProfile" component={CustomerEditProfile} />
       <Stack.Screen name="likedShopList" component={LikedShopList} />
       <Stack.Screen name="nearMeList" component={NearMeList} />
+      <Stack.Screen name="checkoutPage" component={CheckoutPage} />
+      <Stack.Screen name="QR" component={QR} />
     </Stack.Navigator>
     
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { 
     ImageBackground,
     SafeAreaView,
@@ -12,17 +12,34 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { Searchbar } from 'react-native-paper';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
+import firebase from 'firebase';
+
 import { useDispatch, useSelector } from 'react-redux';
 
 import IndivShop from '././importScreens/indivShop';
 
 function shops(props) {
-    const [searchQuery, setSearchQuery] = React.useState('');
+    const [searchQuery, setSearchQuery] = useState('');
     const onChangeSearch = query => setSearchQuery(query);
+
+    const [storeList, setStoreList] = useState([]);
 
     const dispatch = useDispatch();
     //(juswa) fetch data from redux store in App.js using useSelector. the data is from the state managed by reducers
-    const allShops = useSelector(state => state.shops.allShops);
+
+    useEffect(() => {
+        firebase.firestore()
+            .collection('Stores')
+            .onSnapshot(result => {
+                const st = [];
+                result.forEach(function (store){         
+                    st.push(store.data());
+                });
+                console.log(st);
+                setStoreList(st);
+
+            });
+    }, []); 
 
     return (
         <SafeAreaView style={styles.droidSafeArea}>
@@ -59,15 +76,16 @@ function shops(props) {
                         <Text style={styles.shopListTitle}>APresto Shops</Text>
                     </View>
                 }
-                data={allShops}
-                keyExtractor={item => item.shop_ID}
+                data={storeList}
+                keyExtractor={item => item.store_ID}
                 renderItem={itemData => 
                     <IndivShop 
-                        shop_ID = {itemData.item.shop_ID}
+                        store_ID = {itemData.item.store_ID}
                         owner_ID = {itemData.item.owner_ID}
-                        shopName = {itemData.item.shopName}
+                        store_Name = {itemData.item.store_Name}
                         address = {itemData.item.address}
                         specialty = {itemData.item.specialty}
+                        imgLink = {itemData.item.imgLink}
                     />}
             />
             

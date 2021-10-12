@@ -15,26 +15,28 @@ function indivReward(props) {
     const navigation = useNavigation();
     return (
         <TouchableOpacity onPress={()=>
-            navigation.navigate(
-                'rewardItems', {
-                    shop_ID: props.shop_ID,
-                    owner_ID: props.owner_ID,
-                    shopName: props.shopName,
-                    address: props.address,
-                    specialty: props.specialty
-                }
-            )
+            navigation.navigate('rewardItems', 
+            {
+                store_ID: props.store_ID,
+                owner_ID: props.owner_ID,
+                store_Name: props.store_Name,
+                address: props.address,
+                specialty: props.specialty,
+                imgLink: props.imgLink
+            })
         }>
             <View style={styles.container}>
                 <Image style={styles.shopImage}
-                    source={require('../../../assets/DummyShop.jpg')}>
+                    source={{uri:props.imgLink}}>
                 </Image>
                 <View style={styles.shopLine1}>
-                    <Text style={styles.shopName}>{props.shopName}</Text>
+                    <Text style={styles.shopName}>{props.store_Name}</Text>
+                {/*
                     <View style={styles.shopReview}>
                         <Icon name="coins" size={20} color="#fd4140" />
                         <Text style={styles.shopReviewScore}>100</Text>
                     </View>
+                */}
                 </View>
                 <Text style={styles.shopAddress}>{props.address}</Text>
                 <Text style={styles.shopSpecialty}>{props.specialty}</Text>
