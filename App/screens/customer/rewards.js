@@ -58,7 +58,7 @@ function rewards(props) {
                 <Searchbar
                     style={styles.searchBar}
                     placeholder="Search"
-                    onChangeText={(e) => onChangeSearch(e.target.value)}
+                    onChangeText={(e) => onChangeSearch(e)}
                     //value={searchQuery}
                 />
             </View>
