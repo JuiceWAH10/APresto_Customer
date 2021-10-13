@@ -70,7 +70,7 @@ function rewardItemsCart(props) {
                 </ImageBackground>
                 {/* End of Banner */}
 
-                <FlatList style ={styles.cartContainer}
+                {/* <FlatList style ={styles.cartContainer}
                     data={rewCartItems}
                     keyExtractor={item => item.reward_ID}
                     renderItem={itemData => 
@@ -83,7 +83,21 @@ function rewardItemsCart(props) {
                                 dispatch(rewCartFunction.cancelRedeem(itemData.item.reward_ID))
                             }}
                         />}
-                />
+                /> */}
+
+                {cartItems.map(item =>{
+                    return(
+                        <rewCartItem
+                            quantity = {item.quantity} 
+                            product_Name = {item.productTitle}
+                            price = {item.total.toFixed(2)}
+                            imgLink= {item.imgLink}
+                            removeFromCart = {() => {
+                                dispatch(rewCartFunction.cancelRedeem(item.reward_ID))
+                            }}
+                        />
+                    )}
+                )}
 
                 {/* Footer */}
                 <View style={styles.footer}>

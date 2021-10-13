@@ -6,12 +6,13 @@ import { AuthContext } from '../../functions/authProvider';
 import firebase from 'firebase';
 import Dialog from "react-native-dialog";
 import QRCode from "react-qr-code";
+import jsonpack from "jsonpack";
 
 const profile = ({navigation, route}) => {
 
     //user state
     const {user, logout} = useContext(AuthContext);
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState('');
     const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -46,6 +47,8 @@ const profile = ({navigation, route}) => {
         logout();
         setVisible(false);
     };
+
+    const packed = jsonpack.pack({"QR_Type": "customer_ID", "customer_ID":user.uid, "username": userData.username})
 
     return (
         <SafeAreaView style={styles.droidSafeArea}>
@@ -96,7 +99,7 @@ const profile = ({navigation, route}) => {
                 <View style={styles.qrContainer}>
                     <Text style={styles.qrLabel}>Your personal APresto QR</Text>
                         <QRCode 
-                            value = {{"QR_Type": "customer_ID", "customer_ID":user.uid, "username": userData.username}}
+                            value = {packed}
                         />
                 </View>
 
@@ -123,7 +126,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         borderRadius: 30,
         marginTop: 5,
-        marginBottom: 50,
+        marginBottom: 5,
         height: 150,
         width: wp('90%'),
     },
@@ -262,17 +265,21 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         backgroundColor: '#fff',
         borderRadius: 30,
-        height: 400,
+        height: 350,
         width: wp('90%'),
         alignItems: "center",
         paddingTop: hp('2%'),
         paddingBottom: hp('2%'),
-        top: hp('20%')
+        marginTop: 5,
+        marginBottom: 5
+        
+        
     },
     qrLabel:{
         textAlign: "center",
         fontSize: 16,
-        marginBottom: 20
+        marginTop: 10,
+        marginBottom: 10
     },
     titleTransact: {
         textAlign: "center",

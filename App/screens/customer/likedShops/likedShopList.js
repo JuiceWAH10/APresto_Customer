@@ -25,35 +25,49 @@ function likedShopList(props) {
                 <TouchableOpacity onPress={() => navigation.goBack()} >
                     <Icon2 name="left" size={30} color="#ee4b43" />
                 </TouchableOpacity>
-                <Text style={styles.title}>Liked Shops</Text>   
+                <Text style={styles.title}>APresto FAQs</Text>   
             </View>  
             {/* End of Top Navigation */}
 
+                {/* Reposition this inside the flatlist */}
+                {/* Guide only for how it should looked like */}
+                {/* <IndivLikedShops/> */}
+
+            <ScrollView>
                 {/* Banner */}
                 <ImageBackground style={styles.bannerBgImage}
                     imageStyle={{ borderRadius: 30}}
                     source={require('../../../assets/bannerImages/banner_LikedShops.jpg')}>
                     <View style={styles.darken}>
-                        <Text style={styles.bannerLabel}>All shops that you followed is here !</Text>
-                        <Text style={styles.bannerLabelSmall}>It's easier than looking for it again right?</Text>
+                        <Text style={styles.bannerLabel}>What will happen if you continue to buy on the shop you like?</Text>
+                        <Text style={styles.bannerLabelSmall}>Using our application.</Text>
                     </View>    
                 </ImageBackground>
                 {/* End of Banner */}
 
-                {/* Reposition this inside the flatlist */}
-                {/* Guide only for how it should looked like */}
-                <IndivLikedShops/>
+                <Text style={styles.textTitle}>What is APresto?</Text>
+                <Text style={styles.textContent}>   Having the stores online, finding where to buy the products 
+                they need will be easier for you instead of looking out all around the town. Spending
+                 a huge amount on your favorite store will not be in vain with the use of the APresto, for
+                  every purchase you make with the application can accumulate points for redeeming
+                   rewards posted by the shops. Shops provide variety of rewards that will met your satisfaction.</Text>
 
-            <FlatList
-                style={[styles.container, {flex:1}]}
-                ListHeaderComponent={
-                    <View style={styles.shopListTitleContainer}>
-                        <Text style={styles.textInfo}>You can stop from seeing certain shops. Just click unfollow.</Text>
-                    </View>
-                }
+                <Text style={styles.textTitle}>How can I gain reward points?</Text>   
+                <Text style={styles.textContent}>   Every amount of purchased varies on the shop that you will having a 
+                transaction. The corresponding reward point of the products you purchased will be saved in a QR Code 
+                where the shop will scan it. Once scanned the points you gain will be added to your account.</Text>
+
+                <Text style={styles.textTitle}>How can I exchange my points as a reward?</Text>
+                <Text style={styles.textContent}>   You cann select from variety of rewards shops offers. The 
+                points you accumulated can be exchanged to rewards that the shops you selected and transaction
+                will be done also with the used of QR code. Sufficient points are needed to redeem the reward and 
+                the used point/s will be deducted to your account. You can gain points again by purchasing products 
+                from the shops.</Text>
+            </ScrollView>
+
 
                 
-            />
+           
             
             {/* </View> */}
             {/* End of Shop List */}
@@ -102,7 +116,8 @@ const styles = StyleSheet.create({
     },   
     droidSafeArea: {
         flex: 1,
-        paddingTop: Platform.OS === 'android' ? 32 : 0
+        paddingTop: Platform.OS === 'android' ? 32 : 0,
+        paddingBottom: 10
     },
     searchBar: {
         alignSelf: "center",
@@ -164,6 +179,26 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         height: 40,
         width: wp('90%'),
+    },
+    textTitle: {
+        alignSelf: "center",
+        marginTop: 5,
+        marginBottom: 5,
+        marginLeft: wp('10%'),
+        width: wp('90%'),
+        fontSize: 18,
+        fontWeight: "bold"
+    },
+    textContent: {
+        alignSelf: "center",
+        marginTop: 2,
+        marginBottom: 2,
+        marginLeft: wp('10%'),
+        marginRight: wp('10%'),
+        width: wp('90%'),
+        fontSize: 14,
+        textAlign: "justify"
+        
     },
     textInfo: {
         marginTop: 5,

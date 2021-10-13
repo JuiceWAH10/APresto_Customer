@@ -80,8 +80,8 @@ function rewardItems(props) {
                     <Icon2 name="left" size={30} color="#ee4b43" />
                 </TouchableOpacity>
                 <View style={styles.topNavRight}>
-                    <TouchableOpacity onPress={() => "pressed"} >  
-                        <Icon2 name="heart" size={25} color="#ee4b43" />
+                    <TouchableOpacity onPress={()=> navigation.navigate('likedShopList')} >  
+                        <Icon2 name="questioncircleo" size={25} color="#ee4b43" />
                     </TouchableOpacity>    
                     <TouchableOpacity onPress={() => navigation.navigate('checkoutPage', {store_ID: store_ID})} > 
                         <Icon2 name="shoppingcart" size={25} color="#ee4b43" />
@@ -165,7 +165,7 @@ function rewardItems(props) {
                     <View style={styles.allItemsContainer}>
                         {/* List of all rewards !note that items in Popular Rewards is also included here* */}
                         <Text style={styles.allItemsTitle}>All Rewards</Text>
-                            <FlatList
+                            {/* <FlatList
                                 data={rewards}
                                 keyExtractor={item => item.reward_ID}
                                 renderItem={itemData => 
@@ -176,8 +176,19 @@ function rewardItems(props) {
                                         imgLink = {itemData.item.imgLink}
                                         redeemToCart = {() => {dispatch(rewCartFunction.redeemToCart(itemData.item))}}
                                     />}
-                            />
+                            /> */}
                         {/* End of List */}
+                        {rewards.map(item =>{
+                    return(
+                        <AllRewardItem 
+                            reward_Name = {item.reward_Name}
+                            pointsReq = {item.pointsReq}
+                            definition = {item.definition}
+                            imgLink = {item.imgLink}
+                            redeemToCart = {() => {dispatch(rewCartFunction.redeemToCart(item))}}
+                            />
+                        )}
+                    )}
                     </View>
                     {/* End of All Items */}
 

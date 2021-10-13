@@ -70,7 +70,7 @@ function shopItemsCart(props) {
                 </ImageBackground>
                 {/* End of Banner */}
 
-                <FlatList style ={styles.cartContainer}
+                {/* <FlatList style ={styles.cartContainer}
                     data={cartItems}
                     keyExtractor={item => item.product_ID}
                     renderItem={itemData => 
@@ -84,7 +84,22 @@ function shopItemsCart(props) {
                             }}
                             addToCart = {() => {dispatch(cartAction.addToCart(itemData.item))}}
                         />}
-                />
+                /> */}
+
+                {cartItems.map(item =>{
+                    return(
+                        <AllCartItem
+                            quantity = {item.quantity} 
+                            product_Name = {item.productTitle}
+                            price = {item.total.toFixed(2)}
+                            imgLink= {item.imgLink}
+                            removeFromCart = {() => {
+                                dispatch(cartAction.removeFromCart(item.product_ID))
+                            }}
+                            addToCart = {() => {dispatch(cartAction.addToCart(item))}}
+                        />
+                    )}
+                )}
 
                 {/* Footer */}
                 <View style={styles.footer}>
