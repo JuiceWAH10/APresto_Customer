@@ -1,6 +1,7 @@
 import React from 'react';
 import { 
     Image,
+    ImageBackground,
     StyleSheet,
     Text, 
     TouchableOpacity, 
@@ -26,9 +27,12 @@ function indivReward(props) {
             })
         }>
             <View style={styles.container}>
-                <Image style={styles.shopImage}
-                    source={{uri:props.imgLink}}>
-                </Image>
+                <ImageBackground style={{height: 140, width: wp('90%'), borderRadius: 15,  borderWidth: 1, alignSelf: "center"}}
+                    source={require('../../../assets/images/aprestoshopCert.png')}>
+                    <Image style={styles.shopImage}
+                        source={{uri: props.imgLink}}>
+                    </Image>
+                </ImageBackground>
                 <View style={styles.shopLine1}>
                     <Text style={styles.shopName}>{props.store_Name}</Text>
                 {/*

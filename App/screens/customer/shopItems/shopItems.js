@@ -101,8 +101,8 @@ function shopItems(props) {
                     <Icon2 name="left" size={30} color="#ee4b43" />
                 </TouchableOpacity>
                 <View style={styles.topNavRight}>
-                    <TouchableOpacity onPress={() => console.log('pressed')} >  
-                        <Icon2 name="heart" size={25} color="#ee4b43" />
+                    <TouchableOpacity onPress={()=> navigation.navigate('likedShopList')} >  
+                        <Icon2 name="questioncircleo" size={25} color="#ee4b43" />
                     </TouchableOpacity>    
                     <TouchableOpacity onPress={() => navigation.navigate('checkoutPage', {store_ID: store_ID})} > 
                         <Icon2 name="shoppingcart" size={25} color="#ee4b43" />
@@ -146,7 +146,7 @@ function shopItems(props) {
                                             {
                                                 store_ID: store_ID,
                                                 owner_ID: owner_ID,
-                                                shopName: shopName,
+                                                shopName: store_Name,
                                                 address: address,
                                                 specialty: specialty,
                                                 imgLink: imgLink
@@ -212,7 +212,7 @@ function shopItems(props) {
                     <View style={styles.allItemsContainer}>
                         {/* List of all items !note that items in Popular Items is also included here* */}
                         <Text style={styles.allItemsTitle}>All Items</Text>
-                            <FlatList
+                            {/* <FlatList
                                 data={sortedProducts}
                                 keyExtractor={item => item.product_ID}
                                 renderItem={itemData => 
@@ -223,8 +223,20 @@ function shopItems(props) {
                                         imgLink = {itemData.item.imgLink}
                                         addToCart = {() => {dispatch(cartAction.addToCart(itemData.item))}}
                                     />}
-                            />
+                            /> */}
                         {/* End of List */}
+
+                {sortedProducts.map(item =>{
+                    return(
+                        <AllShopItem 
+                            product_Name = {item.product_Name}
+                            price = {item.price}
+                            definition = {item.definition}
+                            imgLink = {item.imgLink}
+                            addToCart = {() => {dispatch(cartAction.addToCart(item))}}
+                            />
+                    )}
+                )}
                     </View>
                     {/* End of All Items */}
                     

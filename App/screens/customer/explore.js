@@ -56,8 +56,8 @@ function explore(props) {
                                 // resizeMode={'contain'}
                                 source={require('../../assets/dualImages/liked_Shops.jpg')}>
                                 <View style={styles.darken}>
-                                    <Text style={styles.dualLabel}>Liked Shops</Text>
-                                    <Text style={styles.dualLabelSmall}>Stores you love</Text>
+                                    <Text style={styles.dualLabel}>APresto FAQs</Text>
+                                    <Text style={styles.dualLabelSmall}>We'll answer it!</Text>
                                 </View>    
                             </ImageBackground>
                         </View>

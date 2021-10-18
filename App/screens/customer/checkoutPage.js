@@ -81,15 +81,17 @@ function checkoutPage(props) {
             
             {/* End of Top Navigation */}
 
-            {cartItems ? 
-                <Text style={styles.cartTitle}>Products</Text>   
-              :null
-            }
+            
 
             <View style={[styles.formContainer, {flex:15}]}>
                 <ScrollView>
+            {!cartItems.length == 0 ? 
+                <Text style={styles.cartTitle}>Products</Text>
+                   
+              :null
+            }
 
-                {cartItems.map((item, key) =>{
+                {cartItems.map(item =>{
                     return(
                         <CartItems
                             type = {item.type}
@@ -105,12 +107,12 @@ function checkoutPage(props) {
                         />
                     )}
                 )}
-                </ScrollView>
                 
-                {rewCartItems ?
+                
+                {!rewCartItems.length == 0 ?
                     <Text style={styles.cartTitle}>Rewards</Text>
                 : null }
-                {rewCartItems.map((item, key) =>{
+                {rewCartItems.map(item =>{
                     return (
                         <CartItems
                             type = {item.type}
@@ -126,6 +128,7 @@ function checkoutPage(props) {
                         />
                     )}
                 )}
+                </ScrollView>
                             
                 
                 

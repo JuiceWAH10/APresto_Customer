@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import { 
     ImageBackground,
     SafeAreaView, 
@@ -23,25 +23,8 @@ function QR(props) {
     const navigation = useNavigation();
     const {totalAmount, totalPoints, cartItems, rewCartItems, store_ID} = props.route.params;
     const dispatch = useDispatch();
-    const [loggedUser, setLoggedUser] = useState(null);
     const {user} = useContext(AuthContext);
 
-    const getUser = async() => {
-        await firebase.firestore()
-        .collection('Customers')
-        .doc(user.uid)
-        .get()
-        .then((documentSnapshot) => {
-            if(documentSnapshot.exists){
-                console.log('User Data', documentSnapshot.data());
-                setLoggedUser(documentSnapshot.data());
-            }
-        })      
-    }
-
-    useEffect(() => {   
-        getUser();
-    }, [])
     
     function returnAndClear(){
         dispatch(cartAction.clearCart());
@@ -50,14 +33,14 @@ function QR(props) {
     }
 
     let orderDetails = {
-        'QR_Type': "transaction",
-        'store_ID': store_ID,
-        'customer_ID':user.uid,
-        'username':loggedUser.username,
-        'totalAmount':totalAmount,
-        'totalPoints': totalPoints,
-        'purchasedProducts':cartItems,
-        'redeemedRewards': rewCartItems
+        QR_Type: "transaction",
+        store_ID: store_ID,
+        customer_ID:user.uid,
+        username:user.username,
+        totalAmount:totalAmount,
+        totalPoints: totalPoints,
+        purchasedProducts:cartItems,
+        redeemedRewards: rewCartItems
     };
 
     let packed = jsonpack.pack(orderDetails)
