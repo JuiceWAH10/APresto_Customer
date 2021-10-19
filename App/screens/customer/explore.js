@@ -31,13 +31,12 @@ function explore(props) {
 
                 <CarouselCards /> 
 
-                <Text style={styles.textInfo}>Want to try something new that is accessible to you? Or do you want
-                 to visit one of the shops you love? <Text style={styles.textBold}> Near Me </Text>
-                  and <Text style={styles.textBold}>Liked Shops</Text> will help you.</Text>
+                <Text style={styles.textInfo}>New to APresto? Confused how it works? <Text style={styles.textBold}> APresto FAQs </Text>
+                   will help you get started.</Text>
 
                 {/* Dual View */}
                 <View style={styles.dual}>
-                    <TouchableOpacity onPress={()=> navigation.navigate('nearMeList')}>
+                    {/* <TouchableOpacity onPress={()=> navigation.navigate('nearMeList')}>
                         <View style={styles.dualContent}>
                             <ImageBackground style={styles.dualBgImage}
                                 imageStyle={{ borderRadius: 30}}
@@ -48,16 +47,17 @@ function explore(props) {
                                 </View>
                             </ImageBackground>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <TouchableOpacity onPress={()=> navigation.navigate('likedShopList')}>
                         <View style={styles.dualContent}>
                             <ImageBackground style={styles.dualBgImage}
                                 imageStyle={{ borderRadius: 30}}
                                 // resizeMode={'contain'}
-                                source={require('../../assets/dualImages/liked_Shops.jpg')}>
+                                source={require('../../assets/bannerImages/banner_LikedShops.jpg')}>
                                 <View style={styles.darken}>
                                     <Text style={styles.dualLabel}>APresto FAQs</Text>
-                                    <Text style={styles.dualLabelSmall}>We'll answer it!</Text>
+                                    <Text style={styles.dualLabelSmall}>Have question about APresto?</Text>
+                                    <Text style={styles.dualLabelSmall}>Click here to get started</Text>
                                 </View>    
                             </ImageBackground>
                         </View>
@@ -67,13 +67,13 @@ function explore(props) {
 
                 {/* Most Reviewed Shop */}
                 {/* <View style={styles.mostReviewsContainer}> */}
-                    <View style={styles.mostReviewsTitleContainer}>
+                    {/* <View style={styles.mostReviewsTitleContainer}>
                         <Icon name="fire" size={25} color="#fd4140" />
                         <Text style={styles.mostReviewsTitle}>Most Reviewed Shops</Text>
-                    </View>
+                    </View> */}
                     {/* Insert Code here for importing Most Reviewed shops with info */}
-                    <IndivShop shop_ID = {1} shopName="Keitandkat Perfume" address="504 Gondola, Muzon, Taytay, Rizal" specialty="Perfumes"/>
-                    <IndivShop shop_ID = {2} shopName="Scrapyard Cafe & Restaurant" address="45 Manila E Rd, Angono, 1930 Rizal" specialty="Pinoy Restaurant"/>
+                    {/* <IndivShop shop_ID = {1} shopName="Keitandkat Perfume" address="504 Gondola, Muzon, Taytay, Rizal" specialty="Perfumes"/>
+                    <IndivShop shop_ID = {2} shopName="Scrapyard Cafe & Restaurant" address="45 Manila E Rd, Angono, 1930 Rizal" specialty="Pinoy Restaurant"/> */}
                     {/* <IndivShop shop_ID = {3} shopName="Blugre Coffee Manila East" address="Don Hilario Cruz, Taytay, Rizal" specialty="Cafe"/>
                     <IndivShop shop_ID = {4} shopName="Korean BBQ & Buffet" address="Peace Be With You Bldg Velasquez Street Brgy, Taytay, Rizal"/>
                     <IndivShop shop_ID = {5} shopName="Jamp Sari-Sari Store" address="Jacob St, Taytay, Rizal"/> */}
@@ -151,28 +151,30 @@ const styles = StyleSheet.create({
     dualContent: {
         borderRadius: 30,
         height: 180,
-        width: wp('44%'),
+        width: wp('90%'),
     },
     dualBgImage: {
         flexDirection: "row",
         borderRadius: 30,
         height: 180,
-        width: wp('44%'),
+        width: wp('90%'),
     },
     dualLabel: {
-        textAlign: "left",
-        marginLeft: 20,
-        marginTop: 120,
+        textAlign: "right",
+       paddingRight: 25,
+        marginTop: 40,
         color: "#fff",
-        fontSize: 18,
-        fontWeight: "bold"
+        fontSize: 30,
+        fontWeight: "bold",
+        width: wp('90%'),
     },
     dualLabelSmall: {
-        textAlign: "left",
-        marginLeft: 20,
+        textAlign: "right",
+        paddingRight: 35,
         marginTop: 2,
         color: "#fff",
         fontSize: 12,
+        width: wp('90%'),
     },
     darken:{
         // flex: 1,

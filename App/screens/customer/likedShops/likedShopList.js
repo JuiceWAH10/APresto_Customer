@@ -9,11 +9,10 @@ import {
     FlatList,
     TouchableOpacity
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Entypo';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
-import IndivLikedShops from '../importScreens/indivLikedShops';
+
 
 function likedShopList(props) {
     const navigation = useNavigation();
@@ -29,18 +28,14 @@ function likedShopList(props) {
             </View>  
             {/* End of Top Navigation */}
 
-                {/* Reposition this inside the flatlist */}
-                {/* Guide only for how it should looked like */}
-                {/* <IndivLikedShops/> */}
-
             <ScrollView>
                 {/* Banner */}
                 <ImageBackground style={styles.bannerBgImage}
                     imageStyle={{ borderRadius: 30}}
                     source={require('../../../assets/bannerImages/banner_LikedShops.jpg')}>
                     <View style={styles.darken}>
-                        <Text style={styles.bannerLabel}>What will happen if you continue to buy on the shop you like?</Text>
-                        <Text style={styles.bannerLabelSmall}>Using our application.</Text>
+                        <Text style={styles.bannerLabel}>APresto? It's new to my ears</Text>
+                        <Text style={styles.bannerLabelSmall}>What is APresto?</Text>
                     </View>    
                 </ImageBackground>
                 {/* End of Banner */}
@@ -51,6 +46,36 @@ function likedShopList(props) {
                  a huge amount on your favorite store will not be in vain with the use of the APresto, for
                   every purchase you make with the application can accumulate points for redeeming
                    rewards posted by the shops. Shops provide variety of rewards that will met your satisfaction.</Text>
+
+                {/* Banner */}
+                <ImageBackground style={styles.bannerBgImage}
+                    imageStyle={{ borderRadius: 30}}
+                    source={require('../../../assets/bannerImages/banner_Reward.jpg')}>
+                    <View style={styles.darken}>
+                        <Text style={styles.bannerLabel}>Getting Started</Text>
+                        <Text style={styles.bannerLabelSmall}>Is it really easy?</Text>
+                    </View>    
+                </ImageBackground>
+                {/* End of Banner */}
+
+                <Text style={styles.textTitle}>Getting Started</Text>   
+                <Text style={styles.textContent}>   The customer’s APresto application allows every customer to 
+                register an account where allows them to gain perks of being a suki of the store they repeatedly shopping
+                with. You can explore several shops and add available items you selected on your cart with just the use of
+                your hand! Presenting the QR code generated to the shop during your purchase or transaction allows you to 
+                either gain points or gather rewards! And lastly APresto gives you the ebility to personalize your information.
+                All of that functionality on this one app. Isn't it AMAZING?! </Text>
+
+                {/* Banner */}
+                <ImageBackground style={styles.bannerBgImage}
+                    imageStyle={{ borderRadius: 30}}
+                    source={require('../../../assets/bannerImages/banner_Product.jpg')}>
+                    <View style={styles.darken}>
+                        <Text style={styles.bannerLabel}>Rewards and Reward Points?</Text>
+                        <Text style={styles.bannerLabelSmall}>How can I acquire it?</Text>
+                    </View>    
+                </ImageBackground>
+                {/* End of Banner */}
 
                 <Text style={styles.textTitle}>How can I gain reward points?</Text>   
                 <Text style={styles.textContent}>   Every amount of purchased varies on the shop that you will having a 
@@ -63,14 +88,8 @@ function likedShopList(props) {
                 will be done also with the used of QR code. Sufficient points are needed to redeem the reward and 
                 the used point/s will be deducted to your account. You can gain points again by purchasing products 
                 from the shops.</Text>
+
             </ScrollView>
-
-
-                
-           
-            
-            {/* </View> */}
-            {/* End of Shop List */}
 
         </SafeAreaView>
     );
@@ -83,13 +102,13 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         borderRadius: 30,
         marginBottom: 10,
-        marginTop: 5,
+        marginTop: 10,
         height: 150,
         width: wp('90%'),
     },
     bannerLabel: {
         textAlign: "center",
-        marginTop: 35,
+        marginTop: 50,
         color: "#fff",
         fontSize: 20,
         fontWeight: "bold",
@@ -106,79 +125,13 @@ const styles = StyleSheet.create({
     },
     darken:{
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.1)',
+        backgroundColor: 'rgba(0,0,0,0.12)',
         borderRadius: 30,
     },
-    container: {
-        flexDirection: "column",
-        width: wp('100%'),
-        backgroundColor: "#fff"
-    },   
     droidSafeArea: {
         flex: 1,
         paddingTop: Platform.OS === 'android' ? 32 : 0,
         paddingBottom: 10
-    },
-    searchBar: {
-        alignSelf: "center",
-        color: "#fd4140",
-        width: wp('90%'),
-        borderColor: "#fd4140",
-        
-    },
-    searchBarContainer: {
-        paddingTop: 6,
-
-        backgroundColor: 'white',
-        height: 70,
-        borderBottomWidth: 4,
-        borderColor: "#ee4b43",
-        shadowColor: "#000",
-        shadowOffset: {
-        width: 0,
-        height: 3,
-        },
-        shadowOpacity: 0.29,
-        shadowRadius: 4.65,
-        elevation: 7,
-    },
-    shopListContainer:{
-        alignSelf: "center",  
-        marginTop: 5,
-        marginBottom: 5,
-        width: wp('100%'),
-        paddingLeft: wp('5%'),
-        paddingRight: wp('5%'),
-        paddingTop: 10,
-        paddingBottom: 10,
-
-        backgroundColor: 'white',
-        shadowColor: "#000",
-        shadowOffset: {
-        width: 0,
-        height: 3,
-        },
-        shadowOpacity: 0.29,
-        shadowRadius: 4.65,
-        elevation: 3,
-    },
-    shopListTitle: {
-        textAlign: "center",
-        marginLeft: 10,
-        marginTop: 10,
-        fontSize: 20,
-        fontWeight: "bold"
-    },
-    shopListTitleIcon: {
-        marginTop: 10,
-    },
-    shopListTitleContainer: {
-        alignSelf: "center",  
-        flexDirection: "row",
-        marginBottom: 10,
-        marginLeft: 8,
-        height: 40,
-        width: wp('90%'),
     },
     textTitle: {
         alignSelf: "center",
@@ -192,22 +145,13 @@ const styles = StyleSheet.create({
     textContent: {
         alignSelf: "center",
         marginTop: 2,
-        marginBottom: 2,
+        marginBottom: 5,
         marginLeft: wp('10%'),
         marginRight: wp('10%'),
         width: wp('90%'),
         fontSize: 14,
         textAlign: "justify"
         
-    },
-    textInfo: {
-        marginTop: 5,
-        marginBottom: 5,
-        fontSize: 12,
-        opacity: .5,
-        paddingLeft: wp('5%'),
-        paddingRight: wp('5%'),
-        textAlign: "center",
     },
     title: {
         color: "#ee4b43",

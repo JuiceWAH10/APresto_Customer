@@ -98,6 +98,8 @@ const styles = StyleSheet.create({
     },
     qrLabel:{
         textAlign: "center",
+        paddingLeft: 5,
+        paddingRight: 5,
         fontSize: 16,
         marginBottom: 20
     }
