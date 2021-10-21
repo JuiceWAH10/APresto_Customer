@@ -153,7 +153,7 @@ const customerEditProfile = ({navigation}) => {
             floating: "true",
             icon: { icon: "auto", position: "left" },
             autoHide: "true", 
-            duration: 2000
+            duration: 2500
         });
     };
 

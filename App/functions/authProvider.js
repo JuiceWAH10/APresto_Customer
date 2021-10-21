@@ -2,12 +2,22 @@
 import React, { createContext, useState } from 'react';
 import firebase, { auth } from 'firebase';
 import { showMessage } from 'react-native-flash-message';
+import { Constants } from 'expo-barcode-scanner';
+//import Dialog from "react-native-dialog";
+
 
 export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
 
 //user state
 const [user, setUser] = useState(null);
+
+//const [visible, setVisible] = useState(false);
+
+/*const handleLogout = () => {
+    logout();
+    setVisible(false);
+};*/
 
 return(
 
@@ -32,7 +42,7 @@ return(
                       floating: "true",
                       icon: { icon: "info", position: "left" },
                       autoHide: "true", 
-                      duration: 2000
+                      duration: 2500
                     });
                     console.log("Login failed...", error);  
                 }
@@ -54,6 +64,25 @@ return(
                                     password,
                                     userImg: null
                                 });
+                                const account = firebase.auth().currentUser;
+                                account.sendEmailVerification()
+                                    .then(() => {
+                                        showMessage({
+                                            message: "Sign up successfully",
+                                            description: "Please check your email for verification",
+                                            type: "success",
+                                            position: "top",
+                                            statusBarHeight: 25,
+                                            floating: "true",
+                                            icon: { icon: "auto", position: "left" },
+                                            autoHide: "true", 
+                                            duration: 10000
+                                        });
+                                        /*<Dialog.Container contentStyle={{height: 110, paddingTop: 12, paddingRight: 19, alignItems: 'center', justifyContent:'center', borderRadius: 15}} visible={visible}>
+                                            <Dialog.Title style={{fontSize: 16, color: '#071964'}}>Sign up successfully</Dialog.Title>
+                                            <Dialog.Button style={{marginRight: 30, marginLeft: 20, fontSize: 16, fontWeight: "bold", color: '#071964'}} label="Ok" onPress={handleLogout} />
+                                        </Dialog.Container>*/
+                                    });
                             })
                 }catch (error){
                     showMessage({

@@ -80,7 +80,7 @@ const LogIn = ({navigation}) => {
                 floating: "true",
                 icon: { icon: "info", position: "left" },
                 autoHide: "true", 
-                duration: 2000
+                duration: 2500
             });
             console.log("Account recovery failed...", error);
         });
