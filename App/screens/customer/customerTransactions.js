@@ -55,7 +55,7 @@ function customerTransactions(props) {
                 {/* Banner */}
                 <ImageBackground style={styles.bannerBgImage}
                         imageStyle={{ borderRadius: 30}}
-                        source={require('../../assets/bannerImages/banner_Suki.jpg')}>
+                        source={require('../../assets/bannerImages/cart_Banner.jpg')}>
                         <View style={styles.darken}>
                             <Text style={styles.bannerLabel}>Your</Text>
                             <Text style={styles.bannerLabel2}>Transactions</Text>
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
         width: wp('90%'),
     },
     bannerLabel: {
-        textAlign: "right",
+        textAlign: "left",
         marginTop: 30,
         color: "#fff",
         fontSize: 25,
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         paddingRight: wp('5%'),
     },
     bannerLabel2: {
-        textAlign: "right",
+        textAlign: "left",
         marginTop: -10,
         color: "#fff",
         fontSize: 25,
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
         paddingRight: wp('5%'),
     },
     bannerLabelSmall: {
-        textAlign: "right",
+        textAlign: "left",
         marginTop: 2,
         color: "#fff",
         fontSize: 14,

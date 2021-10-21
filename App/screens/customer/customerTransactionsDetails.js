@@ -35,7 +35,17 @@ function CustomerTransactionsDetails(props) {
             <View style={styles.contentContainer}>
                 <ScrollView style={styles.scrollStyle}>
 
-                    <Text style={styles.textTitle}>Transaction Details</Text>  
+                    {/* Banner */}
+                    <ImageBackground style={styles.transactBannerBgImage}
+                        imageStyle={{ borderRadius: 30}}
+                        source={require('../../assets/bannerImages/cart_Banner2.jpg')}>
+                        <View style={styles.transactBannerDarken}>
+                            <Text style={styles.transactBannerLabel}>Transaction Details</Text>
+                            <Text style={styles.transactBannerLabelSmall}>Transaction Overview</Text>
+                        </View>    
+                    </ImageBackground>
+                    {/* End of Banner */}
+
                     <Text style={styles.textContent}>Transaction ID: <Text style={styles.textBold}>{trans_ID}</Text></Text>
                     <Text style={styles.textContent}>Customer ID: <Text style={styles.textBold}>{customer_ID} </Text></Text>
                     <Text style={styles.textContent}>Store ID: <Text style={styles.textBold}>{store_ID} </Text></Text>
@@ -44,8 +54,18 @@ function CustomerTransactionsDetails(props) {
                     <Text style={styles.textContent}>Points Earned: <Text style={styles.textBold}>{ptsEarned}</Text></Text>
                     <Text style={styles.textContent}>Points Used: <Text style={styles.textBold}>{ptsDeduct}</Text></Text>
 
-                    <Text style={styles.textTitle}>Purchased Products: </Text>
-                    {/* cancel  na yung charts hahaha */}
+                    
+                    {/* Banner */}
+                    <ImageBackground style={styles.transactBannerBgImage}
+                        imageStyle={{ borderRadius: 30}}
+                        source={require('../../assets/bannerImages/banner_Product.jpg')}>
+                        <View style={styles.transactBannerDarken}>
+                            <Text style={styles.transactBannerLabel}>Purchased Products</Text>
+                            <Text style={styles.transactBannerLabelSmall}>All the products you Purchase</Text>
+                        </View>    
+                    </ImageBackground>
+                    {/* End of Banner */}
+                    
                     {Object.keys(purchasedProducts).map(
                         function(key) {
                             
@@ -61,7 +81,17 @@ function CustomerTransactionsDetails(props) {
                         })
                     }
 
-                    <Text style={styles.textTitle}>Redeemed Rewards: </Text>
+                    {/* Banner */}
+                    <ImageBackground style={styles.transactBannerBgImage}
+                        imageStyle={{ borderRadius: 30}}
+                        source={require('../../assets/bannerImages/banner_Reward.jpg')}>
+                        <View style={styles.transactBannerDarken}>
+                            <Text style={styles.transactBannerLabel}>Redeemed Reward</Text>
+                            <Text style={styles.transactBannerLabelSmall}>All the rewards you Redeem</Text>
+                        </View>    
+                    </ImageBackground>
+                    {/* End of Banner */}
+                    
                     {Object.keys(redeemedRewards).map(
                         function(key) {
                             return(
@@ -151,7 +181,7 @@ const styles = StyleSheet.create({
         width: wp('100%'),
         marginBottom: 10,
         marginTop: 10,   
-        paddingLeft: wp('10%')
+        paddingLeft: wp('5%')
         
     },
     textTitle: {
@@ -167,8 +197,8 @@ const styles = StyleSheet.create({
         color: "#ee4b43",
     },
     textContent: {
-        marginTop: 2,
-        marginBottom: 2,
+        marginTop: 4,
+        marginBottom: 4,
         width: wp('90%'),
         fontSize: 14,
         textAlign: "justify"
@@ -200,6 +230,37 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.29,
         shadowRadius: 4.65,
         elevation: 7,
+    },
+    transactBannerBgImage: {
+        alignSelf: "center",
+        borderRadius: 30,
+        marginTop: 10,
+        marginBottom: 15,
+        height: 70,
+        width: wp('90%'),
+        marginLeft: wp('-5%')
+    },
+    transactBannerDarken:{
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.15)',
+        borderRadius: 30,
+    },
+    transactBannerLabel: {
+        textAlign: "center",
+        marginTop: 10,
+        color: "#fff",
+        fontSize: 20,
+        fontWeight: "bold",
+        paddingLeft: wp('5%'),
+        paddingRight: wp('5%'),
+    },
+    transactBannerLabelSmall: {
+        textAlign: "center",
+        marginTop: 2,
+        color: "#fff",
+        fontSize: 12,
+        paddingLeft: wp('5%'),
+        paddingRight: wp('5%'),
     },
 })
 export default CustomerTransactionsDetails;
