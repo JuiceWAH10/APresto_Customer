@@ -37,9 +37,7 @@ const customerEditProfile = ({navigation}) => {
     //user state
     const {user} = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
-    const [visible, setVisible] = useState(false);
     const [URI, setURI] = useState(null);
-
 
     //access current user
     const getUser = async() => {
@@ -56,6 +54,8 @@ const customerEditProfile = ({navigation}) => {
     }
 
     //For Dialog Box
+    const [visible, setVisible] = useState(false);
+
     const showDialog = () => {
         setVisible(true);
     };
@@ -71,7 +71,7 @@ const customerEditProfile = ({navigation}) => {
     };
 
     const image = {
-        url: "wew",
+        url: URI,
         get gURL(){
             return this.url;
         },
@@ -81,7 +81,7 @@ const customerEditProfile = ({navigation}) => {
     }
 
     var imageUUID = uuid.v4(); // generates UUID (Universally Unique Identifier)
-        
+      
     // Code for Image Picker and Uploading to Firebase storage
     const pickImage = async () => {
         //For choosing photo in the library and crop the photo
@@ -89,7 +89,7 @@ const customerEditProfile = ({navigation}) => {
             ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
-                aspect: [3, 4],
+                aspect: [4, 4],
                 quality: 1,
             });
         if (!result.cancelled) {
@@ -110,7 +110,7 @@ const customerEditProfile = ({navigation}) => {
                     console.log('File available at', downloadURL);
                     image.sURL = downloadURL;
                     console.log('From upload image: ' + image.gURL)
-                    resolve('wew');
+                    resolve(downloadURL);
                 });
             });
         })
@@ -123,6 +123,11 @@ const customerEditProfile = ({navigation}) => {
         //crud.createShop(image.gURL);
         //navigation.goBack();
 
+        let imgUrl = await uploadImage(URI, imageUUID);
+
+        if( imgUrl == null && userData.userImg ) {
+            imgUrl = userData.userImg;}
+
         firebase.firestore()
         .collection('Customers')
         .doc(user.uid)
@@ -133,21 +138,23 @@ const customerEditProfile = ({navigation}) => {
             contact: userData.contact,
             username: userData.username,
             email: userData.email,
-            password: userData.password
+            password: userData.password,
+            userImg: imgUrl
         })
         .then(() => {
-            showMessage({
-                message: "Profile updated successfully",
-                type: "success",
-                position: "top",
-                statusBarHeight: 25,
-                floating: "true",
-                icon: { icon: "auto", position: "left" },
-                autoHide: "true", 
-                duration: 2000
-            });
             console.log("User account updated...");
         })
+
+        showMessage({
+            message: "Profile updated successfully",
+            type: "success",
+            position: "top",
+            statusBarHeight: 25,
+            floating: "true",
+            icon: { icon: "auto", position: "left" },
+            autoHide: "true", 
+            duration: 2000
+        });
     };
 
     useEffect(() => {
@@ -167,7 +174,7 @@ const customerEditProfile = ({navigation}) => {
                 <ScrollView style={styles.form}>
                     <Text style={styles.formTitles}>Upload Profile Picture</Text>
                     {/* Display the selected Image*/}
-                    {URI && <Image source={{ uri: URI }} style={styles.imageUpload} />} 
+                    {URI && <Image source={{ uri: URI ? URI : userData.userImg }} style={styles.imageUpload} />} 
 
                     {/* Button for Image Picker */}
                     <TouchableOpacity style={styles.imageButton} onPress={pickImage} >
@@ -330,8 +337,8 @@ const styles = StyleSheet.create({
     },
     imageUpload: {
         alignSelf: "center",
-        width: 150,
-        height: 200,
+        width: 180,
+        height: 180,
         marginVertical: 10,
         borderWidth: 2,
         borderColor: "#ee4b43"

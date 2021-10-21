@@ -51,7 +51,8 @@ return(
                                     contact,
                                     username,
                                     email,
-                                    password 
+                                    password,
+                                    userImg: null
                                 });
                             })
                 }catch (error){
