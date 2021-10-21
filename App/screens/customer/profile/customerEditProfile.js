@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
+import useState from 'react-usestateref';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -10,6 +11,7 @@ import * as ImagePicker from 'expo-image-picker';
 import uuid from 'react-native-uuid';
 import { showMessage } from "react-native-flash-message";
 import Dialog from "react-native-dialog";
+import { useNavigation } from '@react-navigation/core';
 
 //validator under work
 const validateFields = (email, password, firstname, lastname, address, contact, username) => {
@@ -32,28 +34,40 @@ const validateFields = (email, password, firstname, lastname, address, contact, 
     return isValid;
 };
 
-const customerEditProfile = ({navigation}) => {
+const customerEditProfile = (props) => {
+    const navigation = useNavigation();
+    const {firstname, lastname, address, contact, username, email, password, userImg} = props.route.params;
+    //access current user
 
+    useEffect(() => {
+        setUserData({
+            firstname:firstname,
+            lastname:lastname,
+            address:address,
+            contact:contact,
+            username:username,
+            email:email, 
+            password:password, 
+            userImg:userImg
+        });
+        console.log(userDataRef.current)
+    }, []);
+    
+    const image = {
+        url: userImg,
+        get gURL(){
+            return this.url;
+        },
+        set sURL(u){
+            this.url = u;
+        }
+    }
     //user state
     const {user} = useContext(AuthContext);
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData, userDataRef] = useState({});
     const [visible, setVisible] = useState(false);
-    const [URI, setURI] = useState(null);
-
-
-    //access current user
-    const getUser = async() => {
-        await firebase.firestore()
-        .collection('Customers')
-        .doc(user.uid)
-        .get()
-        .then((documentSnapshot) => {
-            if(documentSnapshot.exists){
-                console.log('User Data', documentSnapshot.data());
-                setUserData(documentSnapshot.data());
-            }
-        })      
-    }
+    const [URI, setURI] = useState({link:image.gURL});
+    const [changedIMG, setChangedIMG] = useState({bool: false});
 
     //For Dialog Box
     const showDialog = () => {
@@ -70,15 +84,7 @@ const customerEditProfile = ({navigation}) => {
         setVisible(false);
     };
 
-    const image = {
-        url: "wew",
-        get gURL(){
-            return this.url;
-        },
-        set sURL(u){
-            this.url = u;
-        }
-    }
+    
 
     var imageUUID = uuid.v4(); // generates UUID (Universally Unique Identifier)
         
@@ -89,11 +95,12 @@ const customerEditProfile = ({navigation}) => {
             ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
-                aspect: [3, 4],
+                aspect: [2, 2   ],
                 quality: 1,
             });
         if (!result.cancelled) {
-            setURI(result.uri);
+            setURI({link: result.uri});
+            setChangedIMG({bool: true});
         }
         console.log(result); // To Display the information of image on the console
     };
@@ -113,6 +120,12 @@ const customerEditProfile = ({navigation}) => {
                     resolve('wew');
                 });
             });
+            if(userImg != ""){
+                var imageRef = firebase.storage().refFromURL(userImg);
+                    imageRef.delete().then(() => {
+                        console.log("Deleted")  
+                    }).catch(err => console.log(err))
+            }
         })
     };
 
@@ -122,7 +135,9 @@ const customerEditProfile = ({navigation}) => {
         //console.log('from add function: ', image.gURL);
         //crud.createShop(image.gURL);
         //navigation.goBack();
-
+        if(changedIMG.bool){
+            const result = await uploadImage(URI.link, imageUUID)
+        }
         firebase.firestore()
         .collection('Customers')
         .doc(user.uid)
@@ -133,7 +148,8 @@ const customerEditProfile = ({navigation}) => {
             contact: userData.contact,
             username: userData.username,
             email: userData.email,
-            password: userData.password
+            password: userData.password,
+            userImg: image.gURL
         })
         .then(() => {
             showMessage({
@@ -147,12 +163,11 @@ const customerEditProfile = ({navigation}) => {
                 duration: 2000
             });
             console.log("User account updated...");
+            navigation.goBack()
         })
     };
 
-    useEffect(() => {
-        getUser();
-    }, []);
+    
 
     return (
         <SafeAreaView style={styles.droidSafeArea}>       
@@ -167,7 +182,7 @@ const customerEditProfile = ({navigation}) => {
                 <ScrollView style={styles.form}>
                     <Text style={styles.formTitles}>Upload Profile Picture</Text>
                     {/* Display the selected Image*/}
-                    {URI && <Image source={{ uri: URI }} style={styles.imageUpload} />} 
+                    {URI && <Image source={{ uri: URI.link }} style={styles.imageUpload} />} 
 
                     {/* Button for Image Picker */}
                     <TouchableOpacity style={styles.imageButton} onPress={pickImage} >

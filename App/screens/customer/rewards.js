@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useContext} from 'react';
+import useState from 'react-usestateref';
 import { 
     ImageBackground,
     SafeAreaView,
@@ -13,43 +14,70 @@ import { Searchbar } from 'react-native-paper';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import firebase from 'firebase';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/core';
+import { AuthContext } from '../../functions/authProvider';
 
 import IndivReward from '././importScreens/indivReward';
 
 function rewards(props) {
-
     const navigation = useNavigation();
-    const {store_ID, owner_ID, store_Name, address, specialty, imgLink} = props.route.params;
 
-    const [searchQuery, setSearchQuery] = useState("");
-    const [storeList, setStoreList] = useState([]);
-    const [shopData, setShopData] = useState(storeList);
+    const [storeList, setStoreList, storeListRef] = useState([]);
+    const [shopData, setShopData,shopDataRef] = useState([]);
+    const [sukiList, setSukiList, sukiListRef] = useState([]);
+    const {user} = useContext(AuthContext)
 
     const dispatch = useDispatch();
     //(juswa) fetch data from redux store in App.js using useSelector. the data is from the state managed by reducers
 
     const onChangeSearch = (query) => {
-        setSearchQuery(query);
-        
         if(query != " "){
             setShopData(
                 storeList.filter((shop) => {
-                shop.store_Name.toLowerCase().includes(query.toLowerCase()) ||
-                shop.speciality.toLowerCase().includes(query.toLowerCase());
-            })
+                    return shop.store_Name.toLowerCase().includes(query.toLowerCase()) || shop.specialty.toLowerCase().includes(query.toLowerCase()) || shop.address.toLowerCase().includes(query.toLowerCase())
+                })
             );       
-        }else{
-            setShopData(storeList);
+        }
+        if(query==""){
+            setShopData(storeListRef.current);
         }
     }
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await firebase.firestore().collection('Stores').get();
-            setStoreList(data.docs.map((doc) => ({...doc.data(), id:doc.id})));
-        };
+    function getStores(){   
+        sukiListRef.current.map(item =>{
+            firebase.firestore()
+            .collection('Stores')
+            .where("owner_ID", "==", item.owner_ID)
+            .onSnapshot(result => {
+                result.forEach(function (store){         
+                    setStoreList([...storeListRef.current, store.data()])
+                });
+                console.log(storeListRef.current);
+                setShopData(storeListRef.current);
+            });
+        })
+        
+    }
 
-        fetchData();
+    function getSuki(){
+        firebase.firestore()
+        .collection('Suki')
+        .where("customer_ID", "==", user.uid)
+        .onSnapshot(result => {
+            const st = [];
+            result.forEach(function (store){         
+                st.push(store.data());
+            });
+            console.log(st);
+            setSukiList(st);
+            getStores() 
+        })
+    }
+
+    useEffect(() => {
+        setSukiList([]);
+        setStoreList([]);
+        getSuki();
     },[]); 
 
     return (
@@ -58,7 +86,7 @@ function rewards(props) {
                 <Searchbar
                     style={styles.searchBar}
                     placeholder="Search"
-                    onChangeText={(e) => onChangeSearch(e.target.value)}
+                    onChangeText={(e) => onChangeSearch(e)}
                     //value={searchQuery}
                 />
             </View>
@@ -71,7 +99,7 @@ function rewards(props) {
                         <Text style={styles.shopListTitle}>Shops you have Points</Text>
                     </View>
                 }
-                data={storeList}
+                data={shopDataRef.current}
                 keyExtractor={item => item.store_ID}
                 renderItem={itemData => 
                     <IndivReward
@@ -81,6 +109,7 @@ function rewards(props) {
                         address = {itemData.item.address}
                         specialty = {itemData.item.specialty}
                         imgLink = {itemData.item.imgLink}
+                        suki = {sukiListRef.current.find(suki => suki.owner_ID == itemData.item.owner_ID)}
                     />}
             />
                 {/* Banner */}

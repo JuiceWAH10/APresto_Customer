@@ -1,4 +1,5 @@
-import React, { useRef, useEffect,useState } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
+import useState from 'react-usestateref'
 import firebase from 'firebase';
 import { 
     Animated,
@@ -17,6 +18,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import * as Linking from 'expo-linking';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -24,12 +26,15 @@ import PopularShopItem from './././importShopItems/popularShopItem';
 import AllShopItem from './././importShopItems/allShopItem';
 
 import * as cartAction from '../../../functions/cartFunction';
+import { AuthContext } from '../../../functions/authProvider';
 
 LogBox.ignoreAllLogs();
 
 function shopItems(props) {
     const navigation = useNavigation();
     const {store_ID, owner_ID, store_Name, address, specialty, imgLink} = props.route.params;
+    const {user} = useContext(AuthContext)
+    const [suki, setSuki, sukiRef] = useState({});
 
     const scrollPosition = useRef(new Animated.Value(0)).current;
     const minHeaderHeight = 0
@@ -46,7 +51,20 @@ function shopItems(props) {
         extrapolate: 'clamp',
     });
 
-    const dispatch = useDispatch();
+        
+    function getSuki(){
+        firebase.firestore()
+        .collection('Suki')
+        .where("customer_ID", "==", user.uid)
+        .where("owner_ID","==",owner_ID)
+        .get()
+        .then(result => {
+            result.forEach((doc)=>{
+                setSuki(doc.data());
+            })
+        });
+     }
+
     {/*
     function print(){
         console.log('pressed')
@@ -77,6 +95,16 @@ function shopItems(props) {
 
     */}
     const [sortedProducts, setProducts] = useState([]);
+    
+    function goToStore(){
+        const url = Platform.select({
+            ios: `maps:0,0?q=${address}`,
+            android: `geo:0,0?q=${address}`,
+          })
+          
+        Linking.openURL(url);
+    }
+    
 
     //fetch data from firestore
     useEffect(()=>{
@@ -90,6 +118,7 @@ function shopItems(props) {
             });
             setProducts(prod);
         });
+        getSuki();
         return () => subscriber();
     }, []);
 
@@ -134,7 +163,7 @@ function shopItems(props) {
                             <Text style={styles.headerLabel}>{store_Name}</Text>
                             <Text style={styles.headerLabelSmall}>{address}</Text>
                             <View style={styles.buttonContainer}>
-                                <TouchableOpacity style={styles.button} onPress={() => "pressed"} >
+                                <TouchableOpacity style={styles.button} onPress={goToStore} >
                                     <Icon name="map" size={20} color="#fff" />
                                     <Text style={styles.buttonLabel}>Navigate</Text>
                                 </TouchableOpacity>
@@ -146,10 +175,11 @@ function shopItems(props) {
                                             {
                                                 store_ID: store_ID,
                                                 owner_ID: owner_ID,
-                                                shopName: store_Name,
+                                                store_Name: store_Name,
                                                 address: address,
                                                 specialty: specialty,
-                                                imgLink: imgLink
+                                                imgLink: imgLink,
+                                                suki: sukiRef.current
                                             }
                                         )
                                     } 
@@ -226,17 +256,18 @@ function shopItems(props) {
                             /> */}
                         {/* End of List */}
 
-                {sortedProducts.map(item =>{
-                    return(
-                        <AllShopItem 
-                            product_Name = {item.product_Name}
-                            price = {item.price}
-                            definition = {item.definition}
-                            imgLink = {item.imgLink}
-                            addToCart = {() => {dispatch(cartAction.addToCart(item))}}
-                            />
-                    )}
-                )}
+                        {sortedProducts.map((item, key)=>{
+                            return(
+                                <AllShopItem 
+                                    key ={key}
+                                    product_Name = {item.product_Name}
+                                    price = {item.price}
+                                    definition = {item.definition}
+                                    imgLink = {item.imgLink}
+                                    addToCart = {() => {dispatch(cartAction.addToCart(item))}}
+                                />
+                            )}
+                        )}
                     </View>
                     {/* End of All Items */}
                     

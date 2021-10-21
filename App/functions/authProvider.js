@@ -8,6 +8,7 @@ export const AuthProvider = ({children}) => {
 
 //user state
 const [user, setUser] = useState(null);
+const [sukiList, setSukiList] = useState([]);
 
 return(
 
@@ -15,6 +16,8 @@ return(
         value={{ 
             user, 
             setUser,
+            sukiList,
+            setSukiList,
             //login function to have access
             login: async(email, password) => {
                 try{

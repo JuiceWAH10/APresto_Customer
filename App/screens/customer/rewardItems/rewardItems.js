@@ -17,6 +17,7 @@ import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import firebase from 'firebase';
+import * as Linking from 'expo-linking';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -27,7 +28,7 @@ import * as rewCartFunction from '../../../functions/rewardsCartFunction';
 
 function rewardItems(props) {
     const navigation = useNavigation();
-    const {store_ID, owner_ID, store_Name, address, specialty, imgLink} = props.route.params;
+    const {store_ID, owner_ID, store_Name, address, specialty, imgLink, suki} = props.route.params;
 
     const scrollPosition = useRef(new Animated.Value(0)).current;
     const minHeaderHeight = 0
@@ -58,14 +59,25 @@ function rewardItems(props) {
     //fetch data from firestore
     const [rewards, setRewards] = useState([]);
 
+    function goToStore(){
+        const url = Platform.select({
+            ios: `maps:0,0?q=${address}`,
+            android: `geo:0,0?q=${address}`,
+          })
+          
+        Linking.openURL(url);
+    }
+
     useEffect(()=>{
+        console.log("pts "+ suki.points)
         const subscriber = firebase.firestore()
         .collection('Rewards')
         .where('shop_ID', '==', store_ID)
         .onSnapshot(querySnapshot => {
             const prod = [];
-            querySnapshot.forEach(function (product){         
-                prod.push(product.data());
+            querySnapshot.forEach(function (product){
+                if(product.data().pointsReq <= suki.points)    
+                    prod.push(product.data());
             });
             setRewards(prod);
         });
@@ -109,11 +121,14 @@ function rewardItems(props) {
                     }}>
                     <ImageBackground style={styles.headerBgImage}
                         source={{uri:imgLink}}>
-                        <View style={styles.darken}>
+                        <View style={styles.darken}>    
                             <Text style={styles.headerLabel}>{store_Name}</Text>
-                            <Text style={styles.headerLabelBig}>100 Points</Text>
+                            {suki.points ? 
+                                <Text style={styles.headerLabelBig}>{suki.points + " Points"}</Text>
+                                 :
+                                 <Text style={styles.headerLabelSmall}>Buy products from this store to earn points</Text>}
                             <View style={styles.buttonContainer}>
-                                <TouchableOpacity style={styles.button} onPress={() => "pressed"} >
+                                <TouchableOpacity style={styles.button} onPress={goToStore} >
                                     <Icon name="map" size={20} color="#fff" />
                                     <Text style={styles.buttonLabel}>Navigate</Text>
                                 </TouchableOpacity>
@@ -178,17 +193,18 @@ function rewardItems(props) {
                                     />}
                             /> */}
                         {/* End of List */}
-                        {rewards.map(item =>{
-                    return(
-                        <AllRewardItem 
-                            reward_Name = {item.reward_Name}
-                            pointsReq = {item.pointsReq}
-                            definition = {item.definition}
-                            imgLink = {item.imgLink}
-                            redeemToCart = {() => {dispatch(rewCartFunction.redeemToCart(item))}}
-                            />
+                        {rewards.map((item, key) =>{
+                            return(
+                                <AllRewardItem 
+                                    key = {key}
+                                    reward_Name = {item.reward_Name}
+                                    pointsReq = {item.pointsReq}
+                                    definition = {item.description}
+                                    imgLink = {item.imgLink}
+                                    redeemToCart = {() => {dispatch(rewCartFunction.redeemToCart(item))}}
+                                />
+                            )}
                         )}
-                    )}
                     </View>
                     {/* End of All Items */}
 

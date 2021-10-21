@@ -64,6 +64,8 @@ const Routes = () => {
     if(initializing) setInitializing(false);
   }
 
+  
+
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber;

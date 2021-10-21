@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useContext} from 'react';
 import { 
     ImageBackground,
     SafeAreaView,
@@ -8,10 +8,11 @@ import {
     View,
     FlatList
 } from 'react-native';
+import useState from 'react-usestateref';
 import Icon from 'react-native-vector-icons/Entypo';
 import { Searchbar } from 'react-native-paper';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-
+import { AuthContext } from '../../functions/authProvider';
 import firebase from 'firebase';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,13 +20,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import IndivShop from '././importScreens/indivShop';
 
 function shops(props) {
-    const [searchQuery, setSearchQuery] = useState('');
-    const onChangeSearch = query => setSearchQuery(query);
+    const [storeList, setStoreList, storeListRef] = useState([]);
+    const [shopData, setShopData,shopDataRef] = useState([]);
+    const {user} = useContext(AuthContext)
 
-    const [storeList, setStoreList] = useState([]);
-
-    const dispatch = useDispatch();
-    //(juswa) fetch data from redux store in App.js using useSelector. the data is from the state managed by reducers
+    const onChangeSearch = (query) => {
+        if(query != " "){
+            setShopData(
+                storeList.filter((shop) => {
+                    return shop.store_Name.toLowerCase().includes(query.toLowerCase()) || shop.specialty.toLowerCase().includes(query.toLowerCase()) || shop.address.toLowerCase().includes(query.toLowerCase())
+                })
+            );       
+        }
+        if(query==""){
+            setShopData(storeListRef.current);
+        }
+    }
 
     useEffect(() => {
         firebase.firestore()
@@ -37,7 +47,7 @@ function shops(props) {
                 });
                 console.log(st);
                 setStoreList(st);
-
+                setShopData(storeListRef.current)
             });
     }, []); 
 
@@ -48,7 +58,6 @@ function shops(props) {
                     style={styles.searchBar}
                     placeholder="Search"
                     onChangeText={onChangeSearch}
-                    value={searchQuery}
                 />
             </View>
 
@@ -76,7 +85,7 @@ function shops(props) {
                         <Text style={styles.shopListTitle}>APresto Shops</Text>
                     </View>
                 }
-                data={storeList}
+                data={shopData}
                 keyExtractor={item => item.store_ID}
                 renderItem={itemData => 
                     <IndivShop 

@@ -16,6 +16,8 @@ import LikedShopList from '../screens/customer/likedShops/likedShopList';
 import NearMeList from '../screens/customer/nearMe/nearMeList';
 import CheckoutPage from '../screens/customer/checkoutPage';
 import QR from '../screens/customer/QR';
+import CustomerTransactions from '../screens/customer/customerTransactions';
+import CustomerTransactionsDetails from '../screens/customer/customerTransactionsDetails';
 
 const Stack = createStackNavigator();
 
@@ -35,6 +37,8 @@ export default Screens = () => {
       <Stack.Screen name="nearMeList" component={NearMeList} />
       <Stack.Screen name="checkoutPage" component={CheckoutPage} />
       <Stack.Screen name="QR" component={QR} />
+      <Stack.Screen name="customerTransactions" component={CustomerTransactions} />
+      <Stack.Screen name="customerTransactionsDetails" component={CustomerTransactionsDetails} />
     </Stack.Navigator>
     
   );

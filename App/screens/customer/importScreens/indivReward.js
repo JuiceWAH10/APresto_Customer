@@ -23,7 +23,8 @@ function indivReward(props) {
                 store_Name: props.store_Name,
                 address: props.address,
                 specialty: props.specialty,
-                imgLink: props.imgLink
+                imgLink: props.imgLink,
+                suki: props.suki
             })
         }>
             <View style={styles.container}>

@@ -57,13 +57,27 @@ const profile = ({navigation, route}) => {
                     source={require('../../assets/images/orange_Header.jpg')}>
                 <View style={styles.profileDarken}>
                     <Image style={styles.profileProfileImage}
-                        source={require('../../assets/Store.jpg')}>
+                        source={userData.userImg != "" ? {uri:userData.userImg} :require('../../assets/Store.jpg')}>
                     </Image>
                     {/*display user data*/}
                     <Text style={styles.profileUsername}>{userData ? userData.username || 'APresto' : 'APresto'}</Text>
                     <Text style={styles.profileFullname}>{userData ? userData.firstname || 'U  S' : 'U  S'}  {userData ? userData.lastname || 'E  R' : 'E  R'}</Text>
                     <View style={styles.profileButtonContainer}>
-                        <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('customerEditProfile')} >
+                        <TouchableOpacity 
+                            style={styles.profileButton} 
+                            onPress={() => navigation.navigate('customerEditProfile',
+                                {
+                                    firstname: userData.firstname,
+                                    lastname: userData.lastname,
+                                    address: userData.address,
+                                    contact: userData.contact,
+                                    username: userData.username,
+                                    email: userData.email,
+                                    password: userData.password,
+                                    userImg: userData.userImg
+                                }
+                            )}
+                        >
                             <Icon name="user" size={20} color="#fff" />
                             <Text style={styles.profileButtonLabel}>Edit Profile</Text>
                         </TouchableOpacity>
@@ -83,14 +97,16 @@ const profile = ({navigation, route}) => {
 
             <ScrollView style={[styles.container, {flex:1}]}>
                 {/* For last transaction */}
+                <TouchableOpacity onPress={()=>navigation.navigate('customerTransactions', {customer_ID:user.uid})}>
                 <ImageBackground style={styles.transactBannerBgImage}
                     imageStyle={{ borderRadius: 30}}
                     source={require('../../assets/bannerImages/cart_Banner.jpg')}>
                     <View style={styles.transactBannerDarken}>
-                        <Text style={styles.transactBannerLabel}>You visited the Shop!</Text>
-                            <Text style={styles.transactBannerLabelSmall}>Earned 100 reward points.</Text>
+                        <Text style={styles.transactBannerLabel}>Transactions</Text>
+                            <Text style={styles.transactBannerLabelSmall}>View all of your transactions</Text>
                     </View>    
                 </ImageBackground>
+                </TouchableOpacity>
                 {/* End of last transaction */}
 
                 {/* Under development */}
