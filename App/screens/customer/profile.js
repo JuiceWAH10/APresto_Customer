@@ -57,7 +57,7 @@ const profile = ({navigation, route}) => {
                     source={require('../../assets/images/orange_Header.jpg')}>
                 <View style={styles.profileDarken}>
                     <Image style={styles.profileProfileImage}
-                        source={userData.userImg != "" ? {uri:userData.userImg} :require('../../assets/Store.jpg')}>
+                        source={{uri: userData ? userData.userImg : '../../assets/Store.jpg'}}>
                     </Image>
                     {/*display user data*/}
                     <Text style={styles.profileUsername}>{userData ? userData.username || 'APresto' : 'APresto'}</Text>

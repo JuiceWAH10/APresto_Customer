@@ -64,12 +64,26 @@ const customerEditProfile = (props) => {
     }
     //user state
     const {user} = useContext(AuthContext);
-    const [userData, setUserData, userDataRef] = useState({});
-    const [visible, setVisible] = useState(false);
-    const [URI, setURI] = useState({link:image.gURL});
-    const [changedIMG, setChangedIMG] = useState({bool: false});
+    const [userData, setUserData] = useState(null);
+    const [URI, setURI] = useState(null);
+
+    //access current user
+    const getUser = async() => {
+        await firebase.firestore()
+        .collection('Customers')
+        .doc(user.uid)
+        .get()
+        .then((documentSnapshot) => {
+            if(documentSnapshot.exists){
+                console.log('User Data', documentSnapshot.data());
+                setUserData(documentSnapshot.data());
+            }
+        })      
+    }
 
     //For Dialog Box
+    const [visible, setVisible] = useState(false);
+
     const showDialog = () => {
         setVisible(true);
     };
@@ -84,10 +98,18 @@ const customerEditProfile = (props) => {
         setVisible(false);
     };
 
-    
+    const image = {
+        url: URI,
+        get gURL(){
+            return this.url;
+        },
+        set sURL(u){
+            this.url = u;
+        }
+    }
 
     var imageUUID = uuid.v4(); // generates UUID (Universally Unique Identifier)
-        
+      
     // Code for Image Picker and Uploading to Firebase storage
     const pickImage = async () => {
         //For choosing photo in the library and crop the photo
@@ -95,7 +117,7 @@ const customerEditProfile = (props) => {
             ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
-                aspect: [2, 2   ],
+                aspect: [4, 4],
                 quality: 1,
             });
         if (!result.cancelled) {
@@ -117,7 +139,7 @@ const customerEditProfile = (props) => {
                     console.log('File available at', downloadURL);
                     image.sURL = downloadURL;
                     console.log('From upload image: ' + image.gURL)
-                    resolve('wew');
+                    resolve(downloadURL);
                 });
             });
             if(userImg != ""){
@@ -135,9 +157,12 @@ const customerEditProfile = (props) => {
         //console.log('from add function: ', image.gURL);
         //crud.createShop(image.gURL);
         //navigation.goBack();
-        if(changedIMG.bool){
-            const result = await uploadImage(URI.link, imageUUID)
-        }
+
+        let imgUrl = await uploadImage(URI, imageUUID);
+
+        if( imgUrl == null && userData.userImg ) {
+            imgUrl = userData.userImg;}
+
         firebase.firestore()
         .collection('Customers')
         .doc(user.uid)
@@ -149,22 +174,23 @@ const customerEditProfile = (props) => {
             username: userData.username,
             email: userData.email,
             password: userData.password,
-            userImg: image.gURL
+            userImg: imgUrl
         })
         .then(() => {
-            showMessage({
-                message: "Profile updated successfully",
-                type: "success",
-                position: "top",
-                statusBarHeight: 25,
-                floating: "true",
-                icon: { icon: "auto", position: "left" },
-                autoHide: "true", 
-                duration: 2000
-            });
             console.log("User account updated...");
             navigation.goBack()
         })
+
+        showMessage({
+            message: "Profile updated successfully",
+            type: "success",
+            position: "top",
+            statusBarHeight: 25,
+            floating: "true",
+            icon: { icon: "auto", position: "left" },
+            autoHide: "true", 
+            duration: 2500
+        });
     };
 
     
@@ -182,7 +208,7 @@ const customerEditProfile = (props) => {
                 <ScrollView style={styles.form}>
                     <Text style={styles.formTitles}>Upload Profile Picture</Text>
                     {/* Display the selected Image*/}
-                    {URI && <Image source={{ uri: URI.link }} style={styles.imageUpload} />} 
+                    {URI && <Image source={{ uri: URI ? URI : userData.userImg }} style={styles.imageUpload} />} 
 
                     {/* Button for Image Picker */}
                     <TouchableOpacity style={styles.imageButton} onPress={pickImage} >
@@ -345,8 +371,8 @@ const styles = StyleSheet.create({
     },
     imageUpload: {
         alignSelf: "center",
-        width: 150,
-        height: 200,
+        width: 180,
+        height: 180,
         marginVertical: 10,
         borderWidth: 2,
         borderColor: "#ee4b43"

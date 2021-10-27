@@ -80,7 +80,7 @@ const LogIn = ({navigation}) => {
                 floating: "true",
                 icon: { icon: "info", position: "left" },
                 autoHide: "true", 
-                duration: 2000
+                duration: 2500
             });
             console.log("Account recovery failed...", error);
         });
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     width: wp('100%'),
     height: 100,
     borderRadius: 100,
-    borderWidth: 1
+    // borderWidth: 1
   },
   LogoContainer:{
     // position: "absolute",
