@@ -55,7 +55,7 @@ function explore(props) {
                                 // resizeMode={'contain'}
                                 source={require('../../assets/bannerImages/banner_LikedShops.jpg')}>
                                 <View style={styles.darken}>
-                                    <Text style={styles.dualLabel}>APresto FAQs</Text>
+                                    <Text style={styles.dualLabel}>APresto Guide</Text>
                                     <Text style={styles.dualLabelSmall}>Have question about APresto?</Text>
                                     <Text style={styles.dualLabelSmall}>Click here to get started</Text>
                                 </View>    

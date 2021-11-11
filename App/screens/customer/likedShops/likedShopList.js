@@ -24,7 +24,7 @@ function likedShopList(props) {
                 <TouchableOpacity onPress={() => navigation.goBack()} >
                     <Icon2 name="left" size={30} color="#ee4b43" />
                 </TouchableOpacity>
-                <Text style={styles.title}>APresto FAQs</Text>   
+                <Text style={styles.title}>APresto Guide</Text>   
             </View>  
             {/* End of Top Navigation */}
 
