@@ -13,27 +13,30 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case ADD_TO_CART:
             const addedProduct = action.product;
+            const product_ID = addedProduct.product_ID;
             const prodPrice = addedProduct.price;
             const prodTitle = addedProduct.product_Name;
             const imgLink = addedProduct.imgLink;
+            const store_ID = addedProduct.shop_ID;
             let cartItem;
             
             //check if cart has the item to be added
-            if(state.items[addedProduct.product_ID]){
+            if(state.items[product_ID]){
                 cartItem = new CartItem(
-                    state.items[addedProduct.product_ID].quantity + 1,
+                    state.items[product_ID].quantity + 1,
                     prodPrice,
                     prodTitle,
-                    state.items[addedProduct.product_ID].total + prodPrice,
-                    imgLink
+                    state.items[product_ID].total + prodPrice,
+                    imgLink,
+                    store_ID
                 );
             }
             else{
-                cartItem = new CartItem(1, prodPrice, prodTitle, prodPrice, imgLink)
+                cartItem = new CartItem(1, prodPrice, prodTitle, prodPrice, imgLink, store_ID)
             }
             return {
                 ...state,
-                items: { ...state.items, [addedProduct.product_ID]: cartItem },
+                items: { ...state.items, [product_ID]: cartItem },
                 totalAmount: state.totalAmount + prodPrice
             };
 
@@ -47,7 +50,8 @@ export default (state = initialState, action) => {
                     selectedCartItem.productPrice, 
                     selectedCartItem.productTitle, 
                     selectedCartItem.total - selectedCartItem.productPrice,
-                    imgLink
+                    imgLink,
+                    store_ID
                 );
                 cartItems = { ...state.items, [action.product_ID]: updatedCartItem}
             }
@@ -62,7 +66,22 @@ export default (state = initialState, action) => {
             };
 
         case CLEAR_CART:
-            return initialState;
+            let minus = 0;
+            let cItems = { ...state.items };
+            for(var i in cItems){
+                if(cItems[i]["store_ID"] === action.store_ID){
+                    minus = minus + cItems[i]["productPrice"];
+                    console.log("id " + action.store_ID)
+                    console.log("min " + minus + " price " + cItems[i]["productPrice"]);
+                    console.log
+                    delete cItems[i];
+                }
+            }
+            return {
+                ...state,
+                items: cItems,
+                totalAmount: state.totalAmount - minus
+            };
 
     }
     return state;

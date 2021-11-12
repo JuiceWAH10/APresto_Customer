@@ -20,14 +20,31 @@ import * as cartAction from '../../functions/cartFunction';
 import * as rewardCart from '../../functions/rewardsCartFunction';
 
 import * as crud from '../../functions/firebaseCRUD';
+import { createIconSetFromIcoMoon } from 'react-native-vector-icons';
 
 function checkoutPage(props) {
     const navigation = useNavigation();
     const {store_ID} = props.route.params;
 
     const dispatch = useDispatch();
+
+    function goQR (){
+        const cItems = cartItems.filter(function(item){return item.store_ID == store_ID});
+        const rItems = rewCartItems.filter(function(item){return item.store_ID == store_ID});
+        console.log("c " + cItems);
+        console.log("r " + rItems);
+        
+        navigation.navigate('QR',
+            {
+                totalAmount: totalAmount, 
+                totalPoints: totalPoints, 
+                cItems: cItems, 
+                rItems: rItems, 
+                store_ID: store_ID
+            });
+    }
+
     //(juswa) fetch data from redux store in App.js using useSelector. the data is from the state managed by reducers
-    const totalAmount = useSelector(state => state.cart.totalAmount);
     const cartItems = useSelector(state => {
         //(juswa) cart items are placed in array to be more manageable
         const cartItemsArray = [];
@@ -39,14 +56,21 @@ function checkoutPage(props) {
                 quantity: state.cart.items[key].quantity,
                 total: state.cart.items[key].total,
                 imgLink: state.cart.items[key].imgLink,
-                type: state.cart.items[key].type
+                type: state.cart.items[key].type,
+                store_ID: state.cart.items[key].store_ID
             });
         }
         return cartItemsArray.sort((a,b) => a.product_ID > b.product_ID ? 1 : -1);
     });
 
+    const totalAmount = 
+        cartItems
+            .filter((item)=>{
+                return item.store_ID == store_ID
+            })
+            .map(item => {return item.productPrice * item.quantity})
+            .reduce((prev, curr) => prev + curr, 0);
 
-    const totalPoints = useSelector(state => state.rewCart.totalPoints);
     const rewCartItems = useSelector(state => {
         //(juswa) cart items are placed in array to be more manageable
         const rewCartItemsArray = [];
@@ -58,11 +82,20 @@ function checkoutPage(props) {
                 quantity: state.rewCart.rewItems[key].quantity,
                 total: state.rewCart.rewItems[key].total,
                 imgLink: state.rewCart.rewItems[key].imgLink,
-                type: state.rewCart.rewItems[key].type
+                type: state.rewCart.rewItems[key].type,
+                store_ID: state.rewCart.rewItems[key].store_ID
             });
         }
         return rewCartItemsArray.sort((a,b) => a.reward_ID > b.reward_ID ? 1 : -1);
     });
+
+    const totalPoints =
+        rewCartItems
+            .filter((item)=>{
+                return item.store_ID == store_ID
+            })
+            .map(item => {return item.productPrice * item.quantity})
+            .reduce((prev, curr) => prev + curr, 0);
     
     return (
         <SafeAreaView style={styles.droidSafeArea}>
@@ -73,7 +106,7 @@ function checkoutPage(props) {
                 </TouchableOpacity>
 
                 <View style={styles.topNavRight}>
-                    <TouchableOpacity style={styles.topNavRightButton} onPress={() => {dispatch(cartAction.clearCart())}}>
+                    <TouchableOpacity style={styles.topNavRightButton} onPress={() => {dispatch(cartAction.clearCart(store_ID))}}>
                         <Text style={styles.topNavRightText}>Clear Cart</Text>
                     </TouchableOpacity>
                 </View>
@@ -85,49 +118,66 @@ function checkoutPage(props) {
 
             <View style={[styles.formContainer, {flex:15}]}>
                 <ScrollView>
-            {!cartItems.length == 0 ? 
+            {cartItems
+                .filter((item)=>{
+                    return item.store_ID == store_ID
+                })
+                .length > 0 ? 
                 <Text style={styles.cartTitle}>Products</Text>
-                   
               :null
             }
 
-                {cartItems.map(item =>{
-                    return(
-                        <CartItems
-                            type = {item.type}
-                            quantity = {item.quantity} 
-                            product_Name = {item.productTitle}
-                            price = {item.productPrice.toFixed(2)}
-                            total = {item.total.toFixed(2)}
-                            imgLink= {item.imgLink}
-                            removeFromCart = {() => {
-                                dispatch(cartAction.removeFromCart(item.product_ID))
-                            }}
-                            addToCart = {() => {dispatch(cartAction.addToCart(item))}}
-                        />
-                    )}
-                )}
+                {cartItems
+                    .filter((item)=>{
+                        return item.store_ID == store_ID
+                    })
+                    .map(item =>{
+                        return(
+                            <CartItems
+                                type = {item.type}
+                                quantity = {item.quantity} 
+                                product_Name = {item.productTitle}
+                                price = {item.productPrice.toFixed(2)}
+                                total = {item.total.toFixed(2)}
+                                imgLink= {item.imgLink}
+                                removeFromCart = {() => {
+                                    dispatch(cartAction.removeFromCart(item.product_ID))
+                                }}
+                                addToCart = {() => {dispatch(cartAction.addToCart(item))}}
+                            />
+                        )}
+                    )
+                }
                 
                 
-                {!rewCartItems.length == 0 ?
+                {rewCartItems
+                    .filter((item)=>{
+                        return item.store_ID == store_ID
+                    })
+                    .length > 0 ?
                     <Text style={styles.cartTitle}>Rewards</Text>
                 : null }
-                {rewCartItems.map(item =>{
-                    return (
-                        <CartItems
-                            type = {item.type}
-                            quantity = {item.quantity}
-                            product_Name = {item.productTitle}
-                            price = {item.productPrice.toFixed(2)}
-                            total = {item.total.toFixed(2)}
-                            imgLink= {item.imgLink}
-                            removeFromCart = {() => {
-                                dispatch(rewardCart.cancelRedeem(item.reward_ID))
-                            }}
-                            addToCart = {() => {dispatch(rewardCart.redeemToCart(item))}}
-                        />
-                    )}
-                )}
+                {rewCartItems
+                    .filter((item)=>{
+                        return item.store_ID == store_ID
+                    })
+                    .map(item =>{
+                        return (
+                            <CartItems
+                                type = {item.type}
+                                quantity = {item.quantity}
+                                product_Name = {item.productTitle}
+                                price = {item.productPrice.toFixed(2)}
+                                total = {item.total.toFixed(2)}
+                                imgLink= {item.imgLink}
+                                removeFromCart = {() => {
+                                    dispatch(rewardCart.cancelRedeem(item.reward_ID))
+                                }}
+                                addToCart = {() => {dispatch(rewardCart.redeemToCart(item))}}
+                            />
+                        )}
+                    )
+                }
                 </ScrollView>
                             
                 
@@ -149,7 +199,7 @@ function checkoutPage(props) {
                     <TouchableOpacity 
                         style={styles.button}
                         disabled={cartItems.length === 0 && rewCartItems.length === 0}
-                        onPress={() => navigation.navigate('QR',{totalAmount, totalPoints, cartItems, rewCartItems, store_ID})} 
+                        onPress={goQR} 
                     >
                         <Text style={styles.buttonLabel}>Proceed</Text>
                     </TouchableOpacity>

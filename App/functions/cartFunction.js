@@ -14,6 +14,6 @@ export const removeFromCart = productID => {
     return {type: REMOVE_FROM_CART, product_ID: productID}
 };
 
-export const clearCart = () => {
-    return {type: CLEAR_CART}
+export const clearCart = store_ID => {
+    return {type: CLEAR_CART, store_ID: store_ID}
 };

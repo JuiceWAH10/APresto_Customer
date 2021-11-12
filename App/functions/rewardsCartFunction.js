@@ -14,6 +14,6 @@ export const cancelRedeem = rewardID => {
     return {type: CANCEL_REDEEM, reward_ID: rewardID}
 };
 
-export const clearCart = () => {
-    return {type: CLEAR_CART}
+export const clearCart = store_ID => {
+    return {type: CLEAR_CART, store_ID: store_ID}
 };

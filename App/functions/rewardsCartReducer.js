@@ -16,6 +16,7 @@ export default (state = initialState, action) => {
             const pointsReq = claimReward.pointsReq;
             const rewName = claimReward.reward_Name;
             const imgLink = claimReward.imgLink;
+            const store_ID = claimReward.shop_ID;
             let cartItem;
             
             //check if cart has the item to be added
@@ -25,11 +26,12 @@ export default (state = initialState, action) => {
                     pointsReq,
                     rewName,
                     state.rewItems[claimReward.reward_ID].total + pointsReq,
-                    imgLink
+                    imgLink,
+                    store_ID
                 );
             }
             else{
-                cartItem = new CartItem(1, pointsReq, rewName, pointsReq, imgLink)
+                cartItem = new CartItem(1, pointsReq, rewName, pointsReq, imgLink, store_ID)
             }
             return {
                 ...state,
@@ -47,7 +49,8 @@ export default (state = initialState, action) => {
                     selectedCartItem.productPrice, 
                     selectedCartItem.productTitle, 
                     selectedCartItem.total - selectedCartItem.productPrice,
-                    imgLink
+                    imgLink,
+                    store_ID
                 );
                 cartItems = { ...state.rewItems, [action.reward_ID]: updatedCartItem}
             }
@@ -62,7 +65,22 @@ export default (state = initialState, action) => {
             };
         
         case CLEAR_CART:
-            return initialState;
+            let minus = 0;
+            let cItems = { ...state.rewItems };
+            for(var i in cItems){
+                if(cItems[i]["store_ID"] === action.store_ID){
+                    minus = minus + cItems[i]["pointsReq"];
+                    console.log("id " + action.store_ID)
+                    console.log("min " + minus + " price " + cItems[i]["pointsReq"]);
+                    console.log
+                    delete cItems[i];
+                }
+            }
+            return {
+                ...state,
+                rewItems: cItems,
+                totalPoints: state.totalPoints - minus
+            };
 
     }
     return state;

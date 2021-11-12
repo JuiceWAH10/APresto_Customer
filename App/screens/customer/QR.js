@@ -21,14 +21,14 @@ import {useDispatch} from 'react-redux';
 
 function QR(props) {
     const navigation = useNavigation();
-    const {totalAmount, totalPoints, cartItems, rewCartItems, store_ID} = props.route.params;
+    const {totalAmount, totalPoints, cItems, rItems, store_ID} = props.route.params;
     const dispatch = useDispatch();
     const {user} = useContext(AuthContext);
 
     
     function returnAndClear(){
-        dispatch(cartAction.clearCart());
-        dispatch(rewardCart.clearCart());
+        dispatch(cartAction.clearCart(store_ID));
+        dispatch(rewardCart.clearCart(store_ID));
         navigation.goBack();
     }
 
@@ -39,11 +39,11 @@ function QR(props) {
         username:user.username,
         totalAmount:totalAmount,
         totalPoints: totalPoints,
-        purchasedProducts:cartItems,
-        redeemedRewards: rewCartItems
+        purchasedProducts:cItems,
+        redeemedRewards: rItems
     };
 
-    let packed = jsonpack.pack(orderDetails)
+    let packed = jsonpack.pack(orderDetails);
     return (
         <SafeAreaView style={styles.droidSafeArea}>
             <ImageBackground style={styles.container} source={require('../../assets/images/splashScreenDark.jpg')}>

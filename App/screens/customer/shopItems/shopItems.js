@@ -36,6 +36,8 @@ function shopItems(props) {
     const {user} = useContext(AuthContext)
     const [suki, setSuki, sukiRef] = useState({});
 
+    const dispatch = useDispatch();
+
     const scrollPosition = useRef(new Animated.Value(0)).current;
     const minHeaderHeight = 0
     const maxHeaderHeight = 200
