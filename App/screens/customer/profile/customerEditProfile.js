@@ -67,6 +67,7 @@ const customerEditProfile = ({navigation}) => {
     const {user} = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
     const [URI, setURI] = useState(null);
+    const [passwordReentryField, setPasswordReentryField] = useState(null);
 
     //access current user
     const getUser = async() => {
