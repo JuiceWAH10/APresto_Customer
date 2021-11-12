@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import useState from 'react-usestateref';
+import React, { useContext, useState, useEffect } from 'react';
+//import useState from 'react-usestateref';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -11,7 +11,7 @@ import * as ImagePicker from 'expo-image-picker';
 import uuid from 'react-native-uuid';
 import { showMessage } from "react-native-flash-message";
 import Dialog from "react-native-dialog";
-import { useNavigation } from '@react-navigation/core';
+//import { useNavigation } from '@react-navigation/core';
 
 //validator under work
 const validateFields = (email, password, firstname, lastname, address, contact, username) => {
@@ -34,12 +34,12 @@ const validateFields = (email, password, firstname, lastname, address, contact, 
     return isValid;
 };
 
-const customerEditProfile = (props) => {
-    const navigation = useNavigation();
-    const {firstname, lastname, address, contact, username, email, password, userImg} = props.route.params;
+const customerEditProfile = ({navigation}) => {
+    //const navigation = useNavigation();
+    //const {firstname, lastname, address, contact, username, email, password, userImg} = props.route.params;
     //access current user
 
-    useEffect(() => {
+    /*useEffect(() => {
         setUserData({
             firstname:firstname,
             lastname:lastname,
@@ -61,7 +61,8 @@ const customerEditProfile = (props) => {
         set sURL(u){
             this.url = u;
         }
-    }
+    }*/
+
     //user state
     const {user} = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
@@ -121,8 +122,8 @@ const customerEditProfile = (props) => {
                 quality: 1,
             });
         if (!result.cancelled) {
-            setURI({link: result.uri});
-            setChangedIMG({bool: true});
+            setURI(result.uri);
+            //setChangedIMG({bool: true});
         }
         console.log(result); // To Display the information of image on the console
     };
@@ -142,12 +143,12 @@ const customerEditProfile = (props) => {
                     resolve(downloadURL);
                 });
             });
-            if(userImg != ""){
+            /*if(userImg != ""){
                 var imageRef = firebase.storage().refFromURL(userImg);
                     imageRef.delete().then(() => {
                         console.log("Deleted")  
                     }).catch(err => console.log(err))
-            }
+            }*/
         })
     };
 
@@ -178,7 +179,7 @@ const customerEditProfile = (props) => {
         })
         .then(() => {
             console.log("User account updated...");
-            navigation.goBack()
+            //navigation.goBack()
         })
 
         showMessage({
@@ -193,7 +194,9 @@ const customerEditProfile = (props) => {
         });
     };
 
-    
+    useEffect(() => {
+        getUser();
+    }, []);
 
     return (
         <SafeAreaView style={styles.droidSafeArea}>       
