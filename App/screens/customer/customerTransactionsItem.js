@@ -40,7 +40,7 @@ function CustomerTransactionsItem(props) {
                     <Text style={styles.sukiInfo}>{store.productTitle, store.productPrice, store.quantity, store.total}</Text>
                 })}
                 {props.redeemedRewards.map((store, key) =>{
-                    <Text style={styles.sukiInfo}>{store[key]}</Text>
+                    <Text key={key} style={styles.sukiInfo}>{store[key]}</Text>
                 })}
             </View>
         </TouchableOpacity>

@@ -17,6 +17,7 @@ export default (state = initialState, action) => {
             const rewName = claimReward.reward_Name;
             const imgLink = claimReward.imgLink;
             const store_ID = claimReward.shop_ID;
+            const type = claimReward.type;
             let cartItem;
             
             //check if cart has the item to be added
@@ -27,11 +28,12 @@ export default (state = initialState, action) => {
                     rewName,
                     state.rewItems[claimReward.reward_ID].total + pointsReq,
                     imgLink,
-                    store_ID
+                    store_ID,
+                    type
                 );
             }
             else{
-                cartItem = new CartItem(1, pointsReq, rewName, pointsReq, imgLink, store_ID)
+                cartItem = new CartItem(1, pointsReq, rewName, pointsReq, imgLink, store_ID, type)
             }
             return {
                 ...state,
@@ -49,8 +51,9 @@ export default (state = initialState, action) => {
                     selectedCartItem.productPrice, 
                     selectedCartItem.productTitle, 
                     selectedCartItem.total - selectedCartItem.productPrice,
-                    imgLink,
-                    store_ID
+                    selectedCartItem.imgLink,
+                    selectedCartItem.store_ID,
+                    selectedCartItem.type
                 );
                 cartItems = { ...state.rewItems, [action.reward_ID]: updatedCartItem}
             }

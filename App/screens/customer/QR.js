@@ -24,6 +24,20 @@ function QR(props) {
     const {totalAmount, totalPoints, cItems, rItems, store_ID} = props.route.params;
     const dispatch = useDispatch();
     const {user} = useContext(AuthContext);
+    const [userData, setUserData] = useState('');
+
+    //access current user
+    useEffect(() => {
+        firebase.firestore()
+        .collection('Customers')
+        .doc(user.uid)
+        .get()
+        .then((documentSnapshot) => {
+            if(documentSnapshot.exists){
+                setUserData(documentSnapshot.data());
+            }
+        })      
+    }, []);
 
     
     function returnAndClear(){
@@ -36,13 +50,14 @@ function QR(props) {
         QR_Type: "transaction",
         store_ID: store_ID,
         customer_ID:user.uid,
-        username:user.username,
+        username:userData.username,
         totalAmount:totalAmount,
         totalPoints: totalPoints,
         purchasedProducts:cItems,
         redeemedRewards: rItems
     };
-
+    console.log("order " + orderDetails);
+    console.log("name "+ userData.username);
     let packed = jsonpack.pack(orderDetails);
     return (
         <SafeAreaView style={styles.droidSafeArea}>

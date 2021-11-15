@@ -131,9 +131,10 @@ function checkoutPage(props) {
                     .filter((item)=>{
                         return item.store_ID == store_ID
                     })
-                    .map(item =>{
+                    .map((item, key) =>{
                         return(
                             <CartItems
+                                key = {key}
                                 type = {item.type}
                                 quantity = {item.quantity} 
                                 product_Name = {item.productTitle}
@@ -161,9 +162,10 @@ function checkoutPage(props) {
                     .filter((item)=>{
                         return item.store_ID == store_ID
                     })
-                    .map(item =>{
+                    .map((item, key) =>{
                         return (
                             <CartItems
+                                key = {key}
                                 type = {item.type}
                                 quantity = {item.quantity}
                                 product_Name = {item.productTitle}
