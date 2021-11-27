@@ -12,7 +12,7 @@ import uuid from 'react-native-uuid';
 import { showMessage } from "react-native-flash-message";
 import Dialog from "react-native-dialog";
 import { string } from 'prop-types';
-//import { useNavigation } from '@react-navigation/core';
+import { useNavigation } from '@react-navigation/core';
 
 //validator under work
 const validateFields = (email, password, firstname, lastname, address, contact, username) => {
@@ -35,9 +35,9 @@ const validateFields = (email, password, firstname, lastname, address, contact, 
     return isValid;
 };
 
-const customerEditProfile = ({navigation}) => {
-    //const navigation = useNavigation();
-    //const {firstname, lastname, address, contact, username, email, password, userImg} = props.route.params;
+const customerEditProfile = (props) => {
+    const navigation = useNavigation();
+    const {firstname, lastname, address, contact, username, email, password, userImg} = props.route.params;
     //access current user
 
     /*useEffect(() => {
@@ -67,7 +67,6 @@ const customerEditProfile = ({navigation}) => {
     //user state
     const {user} = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
-    const [URI, setURI] = useState(null);
     const [passwordReentryField, setPasswordReentryField] = useState(null);
     const [currentPassword, setCurrentPassword] = useState("")
     const [newPassword, setNewPassword] = useState("");
@@ -100,12 +99,13 @@ const customerEditProfile = ({navigation}) => {
     //handleUpdate function
     const handleUpdate = () => {
         editProfile();
-        onChangePassword(console.log());
+        if(currentPassword!=""){
+            onChangePassword();}
         setVisible(false);
     };
 
     const image = {
-        url: URI,
+        url: userImg,
         get gURL(){
             return this.url;
         },
@@ -113,6 +113,8 @@ const customerEditProfile = ({navigation}) => {
             this.url = u;
         }
     }
+    const [URI, setURI] = useState({link:image.gURL});
+    const [changedIMG, setChangedIMG] = useState({bool: false});
 
     var imageUUID = uuid.v4(); // generates UUID (Universally Unique Identifier)
       
@@ -127,7 +129,8 @@ const customerEditProfile = ({navigation}) => {
                 quality: 1,
             });
         if (!result.cancelled) {
-            setURI(result.uri);
+            setURI({link: result.uri});
+            setChangedIMG({bool: true});
             //setChangedIMG({bool: true});
         }
         console.log(result); // To Display the information of image on the console
@@ -148,12 +151,12 @@ const customerEditProfile = ({navigation}) => {
                     resolve(downloadURL);
                 });
             });
-            /*if(userImg != ""){
+            if(userImg != ""){
                 var imageRef = firebase.storage().refFromURL(userImg);
                     imageRef.delete().then(() => {
                         console.log("Deleted")  
                     }).catch(err => console.log(err))
-            }*/
+            }
         })
     };
 
@@ -164,10 +167,9 @@ const customerEditProfile = ({navigation}) => {
         //crud.createShop(image.gURL);
         //navigation.goBack();
 
-        let imgUrl = await uploadImage(URI, imageUUID);
-
-        if( imgUrl == userData.userImg ){
-            imgUrl = userData.userImg;}
+        if(changedIMG.bool){
+            const result = await uploadImage(URI.link, imageUUID)
+        }
 
         firebase.firestore()
         .collection('Customers')
@@ -180,11 +182,11 @@ const customerEditProfile = ({navigation}) => {
             username: userData.username,
             email: userData.email,
             //password: userData.password,
-            userImg: imgUrl
+            userImg: image.gURL
         })
         .then(() => {
             console.log("User account updated...");
-            //navigation.goBack()
+            navigation.goBack()
         })
 
         showMessage({
@@ -199,7 +201,7 @@ const customerEditProfile = ({navigation}) => {
         });
     };
 
-    reauthenticate = (currentPassword) => {
+    const reauthenticate = (currentPassword) => {
         var profile = firebase.auth().currentUser;
         var credentials = firebase.auth.EmailAuthProvider.credential(profile.email, currentPassword);
         return profile.reauthenticateWithCredential(credentials);
@@ -208,7 +210,7 @@ const customerEditProfile = ({navigation}) => {
     const onChangePassword = () => {
         console.log(currentPassword)
         console.log(newPassword)
-        this.reauthenticate(currentPassword).then(() => {
+        reauthenticate(currentPassword).then(() => {
             console.log(currentPassword)
             console.log(newPassword)
             var profile = firebase.auth().currentUser;
@@ -239,7 +241,7 @@ const customerEditProfile = ({navigation}) => {
                 <ScrollView style={styles.form}>
                     <Text style={styles.formTitles}>Upload Profile Picture</Text>
                     {/* Display the selected Image*/}
-                    {URI && <Image source={{ uri: URI ? URI : userData.userImg }} style={styles.imageUpload} />} 
+                    {URI && <Image source={{ uri: URI.link }} style={styles.imageUpload} />} 
 
                     {/* Button for Image Picker */}
                     <TouchableOpacity style={styles.imageButton} onPress={pickImage} >

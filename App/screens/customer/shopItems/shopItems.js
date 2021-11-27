@@ -113,6 +113,7 @@ function shopItems(props) {
         const subscriber = firebase.firestore()
         .collection('Products')
         .where('shop_ID', '==', store_ID)
+        .where('status', '==', 'available')
         .onSnapshot(querySnapshot => {
             const prod = [];
             querySnapshot.forEach(function (product){         
