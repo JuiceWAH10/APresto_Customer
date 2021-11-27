@@ -3,7 +3,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/AntDesign';
-import firebase from 'firebase';
+import firebase, { auth } from 'firebase';
 import validator from 'validator';
 import { AuthContext } from '../../../functions/authProvider';
 import { Input } from 'react-native-elements';
@@ -11,6 +11,7 @@ import * as ImagePicker from 'expo-image-picker';
 import uuid from 'react-native-uuid';
 import { showMessage } from "react-native-flash-message";
 import Dialog from "react-native-dialog";
+import { string } from 'prop-types';
 //import { useNavigation } from '@react-navigation/core';
 
 //validator under work
@@ -68,6 +69,8 @@ const customerEditProfile = ({navigation}) => {
     const [userData, setUserData] = useState(null);
     const [URI, setURI] = useState(null);
     const [passwordReentryField, setPasswordReentryField] = useState(null);
+    const [currentPassword, setCurrentPassword] = useState("")
+    const [newPassword, setNewPassword] = useState("");
 
     //access current user
     const getUser = async() => {
@@ -97,6 +100,7 @@ const customerEditProfile = ({navigation}) => {
     //handleUpdate function
     const handleUpdate = () => {
         editProfile();
+        onChangePassword(console.log());
         setVisible(false);
     };
 
@@ -162,7 +166,7 @@ const customerEditProfile = ({navigation}) => {
 
         let imgUrl = await uploadImage(URI, imageUUID);
 
-        if( imgUrl == null && userData.userImg ) {
+        if( imgUrl == userData.userImg ){
             imgUrl = userData.userImg;}
 
         firebase.firestore()
@@ -175,7 +179,7 @@ const customerEditProfile = ({navigation}) => {
             contact: userData.contact,
             username: userData.username,
             email: userData.email,
-            password: userData.password,
+            //password: userData.password,
             userImg: imgUrl
         })
         .then(() => {
@@ -194,6 +198,29 @@ const customerEditProfile = ({navigation}) => {
             duration: 2500
         });
     };
+
+    reauthenticate = (currentPassword) => {
+        var profile = firebase.auth().currentUser;
+        var credentials = firebase.auth.EmailAuthProvider.credential(profile.email, currentPassword);
+        return profile.reauthenticateWithCredential(credentials);
+    }
+
+    const onChangePassword = () => {
+        console.log(currentPassword)
+        console.log(newPassword)
+        this.reauthenticate(currentPassword).then(() => {
+            console.log(currentPassword)
+            console.log(newPassword)
+            var profile = firebase.auth().currentUser;
+            profile.updatePassword(newPassword).then(() => {
+                console.log("Password updated!");
+            }).catch((error) => {
+                console.log(error);
+            });
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
 
     useEffect(() => {
         getUser();
@@ -288,20 +315,21 @@ const customerEditProfile = ({navigation}) => {
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'lock' }}
                             secureTextEntry={true}
-                            placeholder="Password"              
-                            onChangeText={(text) => {setUserData({...userData, password: text});}}
-                            value={userData ? userData.password : ''}
-                            autoCompleteType="password"
+                            placeholder="New Password"          
+                            onChangeText={(text) => {setNewPassword(text)}}
+                            value={newPassword}
+                            //autoCompleteType="password"
                         />
                     </View>
                     <View style={styles.textView}>
                         <Input
-                            //Re-enter password input
+                            //Current password input
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'lock' }}
                             secureTextEntry={true}
-                            placeholder="Re-enter Password"
-                            onChangeText={(text) => {setPasswordReentryField({text});}}
+                            placeholder="Current Password"
+                            onChangeText={(text) => {setCurrentPassword(text)}}
+                            value={currentPassword}
                         />
                     </View>
                     

@@ -73,7 +73,7 @@ const profile = ({navigation, route}) => {
                                     contact: userData.contact,
                                     username: userData.username,
                                     email: userData.email,
-                                    password: userData.password,
+                                    //password: userData.password,
                                     userImg: userData.userImg
                                 }
                             )}

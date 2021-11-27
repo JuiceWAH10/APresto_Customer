@@ -64,7 +64,7 @@ return(
                                     contact,
                                     username,
                                     email,
-                                    password,
+                                    //password,
                                     userImg: null
                                 });
                                 const account = firebase.auth().currentUser;
