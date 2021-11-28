@@ -63,7 +63,7 @@ return(
                                     address,
                                     contact,
                                     username,
-                                    email,
+                                    //email,
                                     //password,
                                     userImg: null
                                 });

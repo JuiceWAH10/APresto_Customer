@@ -70,6 +70,7 @@ const customerEditProfile = (props) => {
     const [passwordReentryField, setPasswordReentryField] = useState(null);
     const [currentPassword, setCurrentPassword] = useState("")
     const [newPassword, setNewPassword] = useState("");
+    const [newEmail, setNewEmail] = useState("");
 
     //access current user
     const getUser = async() => {
@@ -100,7 +101,9 @@ const customerEditProfile = (props) => {
     const handleUpdate = () => {
         editProfile();
         if(currentPassword!=""){
-            onChangePassword();}
+            onChangePassword();
+            onChangeEmail();
+        }
         setVisible(false);
     };
 
@@ -180,7 +183,7 @@ const customerEditProfile = (props) => {
             address: userData.address,
             contact: userData.contact,
             username: userData.username,
-            email: userData.email,
+            //email: userData.email,
             //password: userData.password,
             userImg: image.gURL
         })
@@ -216,6 +219,21 @@ const customerEditProfile = (props) => {
             var profile = firebase.auth().currentUser;
             profile.updatePassword(newPassword).then(() => {
                 console.log("Password updated!");
+            }).catch((error) => {
+                console.log(error);
+            });
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
+    const onChangeEmail = () => {
+        console.log(newEmail)
+        reauthenticate(currentPassword).then(() => {
+            console.log(newEmail)
+            var profile = firebase.auth().currentUser;
+            profile.updateEmail(newEmail).then(() => {
+                console.log("Email updated!");
             }).catch((error) => {
                 console.log(error);
             });
@@ -306,8 +324,8 @@ const customerEditProfile = (props) => {
                             style={styles.input}
                             leftIcon={{ type: 'font-awesome', name: 'envelope' }}
                             placeholder="Email"
-                            onChangeText={(text) => {setUserData({...userData, email: text});}}
-                            value={userData ? userData.email : ''}
+                            onChangeText={(text) => {setNewEmail(text)}}
+                            value={newEmail}
                             autoCompleteType="email"                           
                         />
                     </View>
