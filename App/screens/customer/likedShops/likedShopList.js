@@ -83,7 +83,7 @@ function likedShopList(props) {
                 where the shop will scan it. Once scanned the points you gain will be added to your account.</Text>
 
                 <Text style={styles.textTitle}>How can I exchange my points as a reward?</Text>
-                <Text style={styles.textContent}>   You cann select from variety of rewards shops offers. The 
+                <Text style={styles.textContent}>   You can select from variety of rewards shops offers. The 
                 points you accumulated can be exchanged to rewards that the shops you selected and transaction
                 will be done also with the used of QR code. Sufficient points are needed to redeem the reward and 
                 the used point/s will be deducted to your account. You can gain points again by purchasing products 

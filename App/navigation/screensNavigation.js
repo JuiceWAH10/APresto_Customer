@@ -18,6 +18,7 @@ import CheckoutPage from '../screens/customer/checkoutPage';
 import QR from '../screens/customer/QR';
 import CustomerTransactions from '../screens/customer/customerTransactions';
 import CustomerTransactionsDetails from '../screens/customer/customerTransactionsDetails';
+import ShopItemDetails from '../screens/customer/shopItems/shopItemDetails';
 
 const Stack = createStackNavigator();
 
@@ -39,6 +40,7 @@ export default Screens = () => {
       <Stack.Screen name="QR" component={QR} />
       <Stack.Screen name="customerTransactions" component={CustomerTransactions} />
       <Stack.Screen name="customerTransactionsDetails" component={CustomerTransactionsDetails} />
+      <Stack.Screen name="shopItemDetails" component={ShopItemDetails} />
     </Stack.Navigator>
     
   );

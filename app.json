@@ -2,6 +2,7 @@
   "expo": {
     "name": "APresto_Customer",
     "slug": "APresto_Customer",
+    "icon": "App/assets/images/Logo-Customer.png",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
