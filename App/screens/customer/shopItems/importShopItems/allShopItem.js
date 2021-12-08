@@ -16,14 +16,23 @@ function allShopItem(props) {
     return (
         <View style={styles.container}>
             <Image style={styles.itemImage}
-                    source={{uri:props.imgLink}}>
+                    source={Array.isArray(props.imgLink)?{uri: props.imgLink[0]}: {uri: props.imgLink}}>
             </Image>
             <View style={styles.itemContainer}>
                 <Text style={styles.itemName}>{props.product_Name}</Text>
                 <Text style={styles.itemPrice}>Php{props.price.toFixed(2)}</Text>
-                <Text style={styles.itemInfo}>{props.definition}</Text>
+                <Text style={styles.itemInfo}>{props.description}</Text>
                 <View style={styles.buttonsContainer}>
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('shopItemDetails')}>
+                    <TouchableOpacity 
+                        style={styles.button} 
+                        onPress={() => 
+                            navigation.navigate('shopItemDetails', {
+                                product_Name: props.product_Name,
+                                price:props.price,
+                                description:props.description,
+                                imgLink:props.imgLink,
+                                type: props.type
+                            })}>
                             <Text style={styles.quantity}>More Details</Text>
                         </TouchableOpacity>
                 </View>

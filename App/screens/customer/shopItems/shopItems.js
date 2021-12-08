@@ -265,8 +265,9 @@ function shopItems(props) {
                                     key ={key}
                                     product_Name = {item.product_Name}
                                     price = {item.price}
-                                    definition = {item.definition}
+                                    description = {item.description}
                                     imgLink = {item.imgLink}
+                                    type = {item.type}
                                     addToCart = {() => {dispatch(cartAction.addToCart(item))}}
                                 />
                             )}

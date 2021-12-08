@@ -10,6 +10,7 @@ import {
     Text, 
     TouchableOpacity, 
     View, 
+    FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
@@ -20,6 +21,7 @@ LogBox.ignoreLogs(['Setting a timer']);// To ignore the warning on uploading
 
 function shopItemDetails(props) {
     const navigation = useNavigation();
+    const {product_Name, price, description,imgLink, type}= props.route.params;
     return (
         <SafeAreaView style={styles.droidSafeArea}>
             {/* Top Navigation */}
@@ -35,29 +37,27 @@ function shopItemDetails(props) {
 
                 {/* Basic Info */}
                 <View style={styles.shadowContainer}>
-                    <Text style={styles.formTitles}>Cheese Brownies</Text>
-                    <Text style={styles.formTitlesSmallBold}>Php25.00</Text>
-                    <Text style={styles.formTitlesSmall}>Brownies</Text>
+                    <Text style={styles.formTitles}>{product_Name}</Text>
+                    <Text style={styles.formTitlesSmallBold}>{type=='product' ? 'Php'+ price : price + ' Pts'}</Text>
+                    <Text style={styles.formTitlesSmall}>{description}</Text>
                    
                 </View>
                 <Text style={styles.textInfo}>Below are images of the product.</Text>
-                
-                <ImageBackground
-                    style={styles.itemImage}
-                    source={require('../../../assets/browny.jpg')}>
-                </ImageBackground>
-                <ImageBackground
-                    style={styles.itemImage}
-                    source={require('../../../assets/browny2.jpg')}>
-                </ImageBackground>
-                <ImageBackground
-                    style={styles.itemImage}
-                    source={require('../../../assets/browny3.jpg')}>
-                </ImageBackground>
-                
+            </ScrollView>
+                <FlatList
+                    data={imgLink}
+                    keyExtractor={item => item}
+                    renderItem={itemData => 
+                        <ImageBackground
+                            style={styles.itemImage}
+                            source={{uri:itemData.item}}
+                        >
+                        </ImageBackground>
+                    }
+                />
 
                 {/* End of Form */}
-            </ScrollView>
+            
 
             <View style={styles.buttonContainer}>
                 <TouchableOpacity 

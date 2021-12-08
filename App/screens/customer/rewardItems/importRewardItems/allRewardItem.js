@@ -9,17 +9,32 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { useNavigation } from '@react-navigation/core';
 
 function allRewardItem(props) {
+    const navigation = useNavigation();
     return (
         <View style={styles.container}>
             <Image style={styles.itemImage}
-                source={{uri:props.imgLink}}>
+                source={Array.isArray(props.imgLink)?{uri: props.imgLink[0]}: {uri: props.imgLink}}>
             </Image>
             <View style={styles.itemContainer}>
                 <Text style={styles.itemName}>{props.reward_Name}</Text>
                 <Text style={styles.itemPrice}>{props.pointsReq}</Text>
                 <Text style={styles.itemInfo}>{props.definition}</Text>
+                <View style={styles.buttonsContainer}>
+                    <TouchableOpacity 
+                        style={styles.button} 
+                        onPress={() => 
+                            navigation.navigate('shopItemDetails', {
+                                product_Name: props.reward_Name,
+                                price:props.pointsReq,
+                                description:props.definition,
+                                imgLink:props.imgLink
+                            })}>
+                            <Text style={styles.quantity}>More Details</Text>
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.buttonsContainer}>
                     <TouchableOpacity style={styles.button} onPress={props.redeemToCart}>
                         <Text style={styles.quantity}>Redeem</Text>
@@ -51,7 +66,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         flexDirection: "row",
         justifyContent: "center",
-        marginTop: 20,
+        marginTop: 5,
         height: 40,
         width: 80
     },
